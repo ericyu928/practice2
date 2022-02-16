@@ -1,0 +1,111 @@
+ .contacttypetitle{
+    width:99%;
+    height: 40px;
+    background-color:gainsboro;
+    margin:0px auto;
+    border-radius:10px;
+
+}
+.contacttypetitle button{
+    width:70px;
+    height: 30px;
+    margin-left: 10px;
+    margin-top: 5px ;
+    font-size: 14px;
+    color: white;
+    background-color:#1aac46;
+    border-radius:5px;
+    border:0;
+    cursor:pointer;
+}
+
+.container{
+    margin-left: 10px;
+    margin-top: 10px ;
+    font-weight: bold;
+
+}
+.container label{
+    font-size: 30px;
+}
+.container label.textlabel{
+    font-size: 15px;
+}
+.container button.back{
+    width: 50px;
+    height: 30px;
+    margin-top: 10px;
+    margin-right: 30px;
+    background-color: white;
+    border-radius:5px;
+    cursor:pointer;
+}
+.container button.enter{
+    width: 50px;
+    height: 30px;
+    margin-top: 10px;
+    margin-right: 10px;
+    color: white;
+    background-color: rgb(70, 70, 245);
+    border-radius:5px;
+    cursor:pointer;
+}
+.container button.del{
+    width: 50px;
+    height: 30px;
+    margin-top: 10px;
+    margin-right: 10px;
+    color: white;
+    background-color: rgb(231, 23, 23);
+    border-radius:5px;
+    cursor:pointer;
+}
+.container button.classlistitem{
+    background-color: transparent;
+    border:none;
+    cursor:pointer;
+}
+.container table{
+    text-align:left;
+    width: 90%;
+}
+.container table thead tr th{
+    border-bottom:2px solid rgba(0, 0, 0, 0.253);
+}
+.container table tbody tr td{
+    border-bottom:2px solid rgb(235, 219, 219) !important; 
+}
+.container table tbody tr td.editbutton{
+    border-bottom:2px solid rgb(255, 255, 255) !important; 
+}
+.container input{
+    width:99%;
+    height: 20px;
+    background-color:rgb(255, 255, 255);
+    margin:0px auto;
+    border-radius:5px;
+    border-color: aliceblue;
+}
+.container input.readonly{
+    width:99%;
+    height: 20px;
+    background-color:rgba(15, 15, 15, 0.178);
+    margin:0px auto;
+    border-radius:5px;
+    border-color: aliceblue;
+}
+.container select{
+    width:99%;
+    height: 30px;
+    margin:0px auto;
+    border-radius:5px;
+
+}
+.container select.classtype{
+    width:150px;
+    height: 30px;
+    margin-left: 20px;
+    margin-right: 20px;
+    border-radius:5px;
+
+}

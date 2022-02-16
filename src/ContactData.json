@@ -1,0 +1,20 @@
+[
+    {
+        "ContactId": "01",
+        "ClassId": "test",
+        "Name": "Tony",
+        "Sex": "男",
+        "Phone": "0123456789",
+        "Address": "aaabbbb",
+        "Email": "123@asd"
+    },
+    {
+        "ContactId": "02",
+        "ClassId": "test1",
+        "Name": "Benny",
+        "Sex": "女",
+        "Phone": "9876543210",
+        "Address": "ccccdddd",
+        "Email": "321@ggg"
+    }
+]

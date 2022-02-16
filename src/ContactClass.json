@@ -1,0 +1,12 @@
+[
+    {
+        "ClassId": "test",
+        "Name": "測試",
+        "UserId": "sys"
+    },
+    {
+        "ClassId": "test1",
+        "Name": "測試1",
+        "UserId": "sys"
+    }
+]
