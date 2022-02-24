@@ -26,41 +26,6 @@ class Contact extends React.Component {
             deleteContactId: ''
         }
     }
-    componentDidUpdate(prevProps, prevState) {
-        if (prevState.newContactData !== this.state.newContactData) {
-            if (this.state.addMode) {
-                this.setState({
-                    contactData: [...prevState.contactData, this.state.newContactData]
-                })
-            }
-            else {
-                for (let i = 0; i < this.state.contactData.length; i++) {
-                    if (this.state.newContactData.ContactId === this.state.contactData[i].ContactId) {
-                        this.setState(() => {
-                            const newItems = [...prevState.contactData];
-                            newItems[i] = this.state.newContactData;
-                            return { contactData: newItems };
-                        })
-                        console.log(i)
-
-                        break;
-                    }
-                }
-            }
-        }
-        if (prevState.deleteContactId !== this.state.deleteContactId) {
-            for (let i = 0; i < this.state.contactData.length; i++) {
-                if (this.state.deleteContactId === this.state.contactData[i].ContactId) {
-                    this.setState(() => {
-                        const newItems = [...prevState.contactData];
-                        newItems.splice(i, 1);
-                        return { contactData: newItems };
-                    })
-                    break;
-                }
-            }
-        }
-    }
     openTypeList = () => {
         this.setState({
             showContactTypeList: true
@@ -104,10 +69,25 @@ class Contact extends React.Component {
     }
     setContactList = (contact) => {
         if (contact.length !== 0) {
-            this.setState({
-                newContactData: contact
-            })
+            if (this.state.addMode) {
+                this.setState({
+                    contactData: [...this.state.contactData, contact]
+                })
+            }
+            else {
+                for (let i = 0; i < this.state.contactData.length; i++) {
+                    if (contact.ContactId === this.state.contactData[i].ContactId) {
+                        this.setState(() => {
+                            const newItems = [...this.state.contactData];
+                            newItems[i] = contact;
+                            return { contactData: newItems };
+                        })
+                        break;
+                    }
+                }
+            }
         }
+
     }
     editData = (ContactData, mode) => {
         this.setState({
@@ -117,10 +97,16 @@ class Contact extends React.Component {
         })
     }
     contactDeleted = (contactId) => {
-        this.setState({
-            showContactAdd: false,
-            deleteContactId: contactId
-        })
+        for (let i = 0; i < this.state.contactData.length; i++) {
+            if (contactId === this.state.contactData[i].ContactId) {
+                this.setState(() => {
+                    const newItems = [...this.state.contactData];
+                    newItems.splice(i, 1);
+                    return { contactData: newItems, showContactAdd: false };
+                })
+                break;
+            }
+        }
     }
     render() {
         return (

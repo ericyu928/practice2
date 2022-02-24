@@ -9,7 +9,7 @@ class ContactTypeList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            contactclasslist: this.props.contacttypeList,
+            contactclasslist: [],
             contactTypeEdit: false,
             newclass: [],
             clickClassId: '',
@@ -18,39 +18,10 @@ class ContactTypeList extends React.Component {
             deleteClassId: ''
         }
     }
-    componentDidUpdate(prevProps, prevState) {
-        if (prevState.newclass !== this.state.newclass) {
-            if (this.state.addMode) {
-                this.setState({
-                    contactclasslist: [...prevState.contactclasslist, this.state.newclass]
-                })
-
-            }
-            else {
-                for (let i = 0; i < this.state.contactclasslist.length; i++) {
-                    if (this.state.newclass.ClassId === this.state.contactclasslist[i].ClassId) {
-                        this.setState(() => {
-                            const newItems = [...prevState.contactclasslist];
-                            newItems[i].Name = this.state.newclass.Name;
-                            return { contactclasslist: newItems };
-                        })
-                        break;
-                    }
-                }
-            }
-        }
-        if (prevState.deleteClassId !== this.state.deleteClassId) {
-            for (let i = 0; i < this.state.contactclasslist.length; i++) {
-                if (this.state.deleteClassId === this.state.contactclasslist[i].ClassId) {
-                    this.setState(() => {
-                        const newItems = [...prevState.contactclasslist];
-                        newItems.splice(i,1);
-                        return { contactclasslist: newItems };
-                    })
-                    break;
-                }
-            }
-        }
+    componentDidMount(){
+        this.setState({
+            contactclasslist:this.props.contacttypeList
+        })
     }
     editContactType = () => {
         this.setState({
@@ -65,17 +36,39 @@ class ContactTypeList extends React.Component {
             contactTypeEdit: false
         })
         if (newClass.length !== 0 && newClass.Name !== "") {
-            this.setState({
-                contactTypeEdit: false,
-                newclass: newClass
-            })
+            if (this.state.addMode) {
+                this.setState({
+                    contactclasslist: [...this.state.contactclasslist, newClass]
+                })
+
+            }
+            else {
+                for (let i = 0; i < this.state.contactclasslist.length; i++) {
+                    if (newClass.ClassId === this.state.contactclasslist[i].ClassId) {
+                        this.setState(() => {
+                            const newItems = [...this.state.contactclasslist];
+                            newItems[i].Name = newClass.Name;
+                            return { contactclasslist: newItems };
+                        })
+                        break;
+                    }
+                }
+            }
         }
     }
     classDeleted = (classId) => {
-        this.setState({
-            contactTypeEdit: false,
-            deleteClassId: classId
-        })
+        for (let i = 0; i < this.state.contactclasslist.length; i++) {
+            if (classId === this.state.contactclasslist[i].ClassId) {
+                this.setState(() => {
+                    const newItems = [...this.state.contactclasslist];
+                    newItems.splice(i, 1);
+                    return {
+                        contactclasslist: newItems, contactTypeEdit: false,
+                    };
+                })
+                break;
+            }
+        }
     }
     editClass = event => {
         this.setState({
@@ -109,7 +102,7 @@ class ContactTypeList extends React.Component {
                             </thead>
                             <tbody>
                                 {this.state.contactclasslist.map((conlist) =>
-                                    <tr>
+                                    <tr key={conlist.ClassId}>
                                         <td>
                                             <button className="classlistitem" onClick={this.editClass.bind(this, conlist)}>{conlist.Name}</button>
                                         </td>

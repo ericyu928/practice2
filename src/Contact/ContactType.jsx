@@ -16,7 +16,7 @@ class ContactType extends React.Component{
                <select className="classtype" onChange={this.classTypeChange}>
                    <option value="*">全部</option>
                    {this.state.contactclass.map((c_class)=>
-                       <option value={c_class.ClassId}>{c_class.Name}</option>
+                       <option key={c_class.ClassId} value={c_class.ClassId}>{c_class.Name}</option>
                    )}
                </select> 
         )

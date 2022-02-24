@@ -4,11 +4,11 @@ class TypeError extends React.Component{
     constructor(props){
         super(props);
         this.state={
-            onOk:false
+            onCheck:false
         }
     }
     okClick =()=>{
-        this.props.onCheck(this.state.onOk)
+        this.props.onCheck(this.state.onCheck)
     }
     render(){
         return(
@@ -17,7 +17,7 @@ class TypeError extends React.Component{
                     <label>尚有欄位未輸入</label>
                 </div>
                 <footer>
-                    <button className="del" onClick={this.okClick} onOk={this.state.onOk}>確定</button>
+                    <button className="del" onClick={this.okClick}>確定</button>
                 </footer>
             </div>
         )

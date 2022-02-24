@@ -6,11 +6,18 @@ class ContactTypeEdit extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: this.props.onClickName,
-            ClassId: this.props.onClickClassId,
-            addMode: this.props.addMode,
+            name: '',
+            ClassId: '',
+            addMode: false,
             errorType: false
         }
+    }
+    componentDidMount(){
+        this.setState({
+            name: this.props.onClickName,
+            ClassId: this.props.onClickClassId,
+            addMode: this.props.addMode
+        })
     }
     componentDidUpdate(prevProps, prevState) {
         if (!this.state.addMode) {
@@ -76,10 +83,11 @@ class ContactTypeEdit extends React.Component {
             return <div style={{ display: "none" }}></div>
         }
     }
-    checkTyped = (onOk) => {
+    checkTyped = () => {
         this.setState({
-            errorType: onOk
+            errorType: false
         })
+
     }
     render() {
         return (

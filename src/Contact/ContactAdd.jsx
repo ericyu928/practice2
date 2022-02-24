@@ -5,6 +5,22 @@ import TypeError from "./TypeError";
 class ContactAdd extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            classid: '',
+            className: '',
+            contactId: '',
+            name: '',
+            sex: '',
+            email: '',
+            phone: '',
+            address: '',
+            addMode: false,
+            contactData: '',
+            errorType: false
+
+        }
+    }
+    componentDidMount(){
         let cName;
         let cId;
         let conId;
@@ -21,13 +37,13 @@ class ContactAdd extends React.Component {
             cId = this.props.contactClassList[0].ClassId
             cName = this.props.contactClassList[0].Name
         }
-        if(this.props.onContactData.ContactId===""){
-            conId=Math.random().toString();
+        if (this.props.onContactData.ContactId === "") {
+            conId = Math.random().toString();
         }
-        else{
-            conId= this.props.onContactData.ContactId
+        else {
+            conId = this.props.onContactData.ContactId
         }
-        this.state = {
+        this.setState({
             classid: cId,
             className: cName,
             contactId: conId,
@@ -38,9 +54,7 @@ class ContactAdd extends React.Component {
             address: this.props.onContactData.Address,
             addMode: this.props.addMode,
             contactData: this.props.onContactData,
-            errorType: false
-
-        }
+        })
     }
     nameTyped = event => {
         this.setState({
@@ -69,14 +83,14 @@ class ContactAdd extends React.Component {
     }
     onClickSave = event => {
         let editContactList = []
-        if ((this.state.name === "" || this.state.phone === "" || this.state.address === "" ||
-            this.state.email === "")&& event) {
+        if (event && (this.state.name === "" || this.state.phone === "" || this.state.address === "" ||
+            this.state.email === "")) {
             this.setState({
                 errorType: true
             })
         }
         else {
-            if (event) {           
+            if (event) {
                 editContactList = {
                     ContactId: this.state.contactId,
                     ClassId: this.state.classid,
@@ -87,8 +101,6 @@ class ContactAdd extends React.Component {
                     Email: this.state.email
                 }
             }
-            console.log(editContactList)
-
             this.props.onContactList(editContactList)
             this.props.onShow(false)
         }
