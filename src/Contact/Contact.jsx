@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 
 import ContactClass from "../ContactClass.json";
 import ContactData from "../ContactData.json";
@@ -112,7 +113,7 @@ class Contact extends React.Component {
         return (
             <div className="container">
                 {this.state.showContactTypeList && <ContactTypeList onShow={this.showContactClassType}
-                    onContactTypeList={this.setContactTypeList} contacttypeList={this.state.contacttypelist} />}
+                    onContactTypeList={this.setContactTypeList} contacttypeList={this.props.contacttypelist} />}
                 {!this.state.showContactTypeList && !this.state.showContactAdd ?
                     <div>
                         <div className='contacttypetitle'>
@@ -123,10 +124,10 @@ class Contact extends React.Component {
                         </div>
                         <div>
                             <label className="textlabel" style={{ marginLeft: 30 }}>類別</label>
-                            <ContactType typeSelected={this.contactTypeSelect} contacttypeList={this.state.contacttypelist} />
+                            <ContactType typeSelected={this.contactTypeSelect} contacttypeList={this.props.contacttypelist} />
                             <button className="enter" type="button" onClick={this.openAddList}>新增</button>
                         </div>
-                        <ContactTable classType={this.state.classType} contactData={this.state.contactData}
+                        <ContactTable classType={this.state.classType} contactData={this.props.contactData}
                             editContactData={this.editData}
                         />
                     </div>
@@ -137,7 +138,7 @@ class Contact extends React.Component {
                     onContactList={this.setContactList}
                     onContactData={this.state.editContactData}
                     addMode={this.state.addMode}
-                    contactClassList={this.state.contacttypelist} />}
+                    contactClassList={this.props.contacttypelist} />}
             </div>
 
 
@@ -145,4 +146,16 @@ class Contact extends React.Component {
     }
 }
 
-export default Contact;
+const useReduxProps = state => {
+    return{
+        contacttypelist: state.contacttypelist,
+        contactData: state.contactData
+    }
+}
+const useReduxSelector = dispatch =>{
+    return{
+        
+    }
+}
+
+export default connect(useReduxProps,useReduxSelector)(Contact);

@@ -1,5 +1,5 @@
 import React from "react";
-
+import { connect } from "react-redux";
 import ContactTypeEdit from "./ContactTypeEdit";
 
 import './Ui.css';
@@ -18,9 +18,9 @@ class ContactTypeList extends React.Component {
             deleteClassId: ''
         }
     }
-    componentDidMount(){
+    componentDidMount() {
         this.setState({
-            contactclasslist:this.props.contacttypeList
+            contactclasslist: this.props.contacttypeList
         })
     }
     editContactType = () => {
@@ -37,38 +37,44 @@ class ContactTypeList extends React.Component {
         })
         if (newClass.length !== 0 && newClass.Name !== "") {
             if (this.state.addMode) {
-                this.setState({
-                    contactclasslist: [...this.state.contactclasslist, newClass]
-                })
-
+                // this.setState({
+                //     contactclasslist: [...this.state.contactclasslist, newClass]
+                // })
+                this.props.addContactList();
             }
             else {
-                for (let i = 0; i < this.state.contactclasslist.length; i++) {
-                    if (newClass.ClassId === this.state.contactclasslist[i].ClassId) {
-                        this.setState(() => {
-                            const newItems = [...this.state.contactclasslist];
-                            newItems[i].Name = newClass.Name;
-                            return { contactclasslist: newItems };
-                        })
-                        break;
-                    }
-                }
+                // for (let i = 0; i < this.state.contactclasslist.length; i++) {
+                //     if (newClass.ClassId === this.state.contactclasslist[i].ClassId) {
+                //         this.setState(() => {
+                //             const newItems = [...this.state.contactclasslist];
+                //             newItems[i].Name = newClass.Name;
+                //             return { contactclasslist: newItems };
+                //         })
+                //         break;
+                //     }
+                // }
+                this.props.editContactList();
             }
         }
     }
     classDeleted = (classId) => {
-        for (let i = 0; i < this.state.contactclasslist.length; i++) {
-            if (classId === this.state.contactclasslist[i].ClassId) {
-                this.setState(() => {
-                    const newItems = [...this.state.contactclasslist];
-                    newItems.splice(i, 1);
-                    return {
-                        contactclasslist: newItems, contactTypeEdit: false,
-                    };
-                })
-                break;
-            }
-        }
+        // for (let i = 0; i < this.state.contactclasslist.length; i++) {
+        //     if (classId === this.state.contactclasslist[i].ClassId) {
+        //         this.setState(() => {
+        //             const newItems = [...this.state.contactclasslist];
+        //             newItems.splice(i, 1);
+        //             return {
+        //                 contactclasslist: newItems, contactTypeEdit: false,
+        //             };
+        //         })
+        //         break;
+        //     }
+        // }
+        this.setState({
+            contactTypeEdit: false
+        })
+        this.props.deleteContactList();
+
     }
     editClass = event => {
         this.setState({
@@ -80,7 +86,7 @@ class ContactTypeList extends React.Component {
     }
     hideContactType = () => {
         this.props.onShow(false)
-        this.props.onContactTypeList(this.state.contactclasslist)
+        this.props.onContactTypeList(this.props.contacttypelist)
     }
     render() {
         return (
@@ -101,7 +107,7 @@ class ContactTypeList extends React.Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                {this.state.contactclasslist.map((conlist) =>
+                                {this.props.contacttypelist.map((conlist) =>
                                     <tr key={conlist.ClassId}>
                                         <td>
                                             <button className="classlistitem" onClick={this.editClass.bind(this, conlist)}>{conlist.Name}</button>
@@ -124,4 +130,18 @@ class ContactTypeList extends React.Component {
     }
 }
 
-export default ContactTypeList;
+const useReduxProps = state => {
+    return {
+        contacttypelist: state.contacttypelist
+    }
+}
+
+const useReduxSelector = dispatch => {
+    return {
+        addContactList: () => dispatch({ type: 'addContactList', newClass: this.props.newClass }),
+        editContactList: () => dispatch({ type: 'editContactList', newClass: this.props.newClass }),
+        deleteContactList: () => dispatch({ type: 'deleteContactList', classId: this.props.classId }),
+    }
+}
+
+export default connect(useReduxProps, useReduxSelector)(ContactTypeList);
