@@ -13,13 +13,6 @@ class ContactTable extends React.Component {
             contactList: this.props.contactData,
         })
     }
-    // componentDidUpdate(prevProps, prevState) {
-    //     if (prevProps.contactData !== this.props.contactData) {
-    //         this.setState({
-    //             contactList: this.props.contactData
-    //         })
-    //     }
-    // }
     editContactData = event =>{
         this.props.editContactData(event,false)
     }

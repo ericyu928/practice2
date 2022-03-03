@@ -37,43 +37,18 @@ class ContactTypeList extends React.Component {
         })
         if (newClass.length !== 0 && newClass.Name !== "") {
             if (this.state.addMode) {
-                // this.setState({
-                //     contactclasslist: [...this.state.contactclasslist, newClass]
-                // })
-                this.props.addContactList();
+                this.props.addContactTypeList(newClass);
             }
             else {
-                // for (let i = 0; i < this.state.contactclasslist.length; i++) {
-                //     if (newClass.ClassId === this.state.contactclasslist[i].ClassId) {
-                //         this.setState(() => {
-                //             const newItems = [...this.state.contactclasslist];
-                //             newItems[i].Name = newClass.Name;
-                //             return { contactclasslist: newItems };
-                //         })
-                //         break;
-                //     }
-                // }
-                this.props.editContactList();
+                this.props.editContactTypeList(newClass);
             }
         }
     }
     classDeleted = (classId) => {
-        // for (let i = 0; i < this.state.contactclasslist.length; i++) {
-        //     if (classId === this.state.contactclasslist[i].ClassId) {
-        //         this.setState(() => {
-        //             const newItems = [...this.state.contactclasslist];
-        //             newItems.splice(i, 1);
-        //             return {
-        //                 contactclasslist: newItems, contactTypeEdit: false,
-        //             };
-        //         })
-        //         break;
-        //     }
-        // }
-        this.setState({
+         this.setState({
             contactTypeEdit: false
         })
-        this.props.deleteContactList();
+        this.props.deleteContactTypeList(classId);
 
     }
     editClass = event => {
@@ -138,9 +113,9 @@ const useReduxProps = state => {
 
 const useReduxSelector = dispatch => {
     return {
-        addContactList: () => dispatch({ type: 'addContactList', newClass: this.props.newClass }),
-        editContactList: () => dispatch({ type: 'editContactList', newClass: this.props.newClass }),
-        deleteContactList: () => dispatch({ type: 'deleteContactList', classId: this.props.classId }),
+        addContactTypeList: (newClass) => dispatch({ type: 'addContactTypeList', newClass: newClass }),
+        editContactTypeList: (newClass) => dispatch({ type: 'editContactTypeList', newClass: newClass }),
+        deleteContactTypeList: (classId) => dispatch({ type: 'deleteContactTypeList', classId: classId }),
     }
 }
 

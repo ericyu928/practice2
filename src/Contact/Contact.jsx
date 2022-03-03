@@ -38,7 +38,7 @@ class Contact extends React.Component {
             addMode: true,
             editContactData: {
                 ContactId: Math.random().toString(),
-                ClassId: this.state.contacttypelist[0].ClassId,
+                ClassId: this.props.contacttypelist[0].ClassId,
                 Name: '',
                 Sex: '男',
                 Phone: '',
@@ -71,24 +71,12 @@ class Contact extends React.Component {
     setContactList = (contact) => {
         if (contact.length !== 0) {
             if (this.state.addMode) {
-                this.setState({
-                    contactData: [...this.state.contactData, contact]
-                })
+                this.props.addContactList(contact);
             }
             else {
-                for (let i = 0; i < this.state.contactData.length; i++) {
-                    if (contact.ContactId === this.state.contactData[i].ContactId) {
-                        this.setState(() => {
-                            const newItems = [...this.state.contactData];
-                            newItems[i] = contact;
-                            return { contactData: newItems };
-                        })
-                        break;
-                    }
-                }
+                this.props.editContactList(contact);
             }
         }
-
     }
     editData = (ContactData, mode) => {
         this.setState({
@@ -98,16 +86,8 @@ class Contact extends React.Component {
         })
     }
     contactDeleted = (contactId) => {
-        for (let i = 0; i < this.state.contactData.length; i++) {
-            if (contactId === this.state.contactData[i].ContactId) {
-                this.setState(() => {
-                    const newItems = [...this.state.contactData];
-                    newItems.splice(i, 1);
-                    return { contactData: newItems, showContactAdd: false };
-                })
-                break;
-            }
-        }
+        this.props.delContactList(contactId);
+        this.setState({ showContactAdd: false })
     }
     render() {
         return (
@@ -147,15 +127,17 @@ class Contact extends React.Component {
 }
 
 const useReduxProps = state => {
-    return{
+    return {
         contacttypelist: state.contacttypelist,
         contactData: state.contactData
     }
 }
-const useReduxSelector = dispatch =>{
-    return{
-        
+const useReduxSelector = dispatch => {
+    return {
+        addContactList: (contact) => dispatch({ type: 'addContactList', contact: contact }),
+        editContactList: (contact) => dispatch({ type: 'editContactList', contact: contact }),
+        delContactList: (contactId) => dispatch({ type: 'delContactList', contactId: contactId }),
     }
 }
 
-export default connect(useReduxProps,useReduxSelector)(Contact);
+export default connect(useReduxProps, useReduxSelector)(Contact);
