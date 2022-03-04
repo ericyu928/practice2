@@ -1,9 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import ContactClass from "../ContactClass.json";
-import ContactData from "../ContactData.json";
-
 
 import ContactType from "./ContactType.jsx";
 import ContactTable from "./ContactTable.jsx";
@@ -19,12 +16,7 @@ class Contact extends React.Component {
             showContactTypeList: false,
             showContactAdd: false,
             classType: "*",
-            contacttypelist: ContactClass,
-            contactData: ContactData,
-            newContactData: [],
-            editContactData: [],
             addMode: false,
-            deleteContactId: ''
         }
     }
     openTypeList = () => {

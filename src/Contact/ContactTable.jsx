@@ -1,33 +1,26 @@
 import React from "react";
 
+import { connect } from 'react-redux'
+
 class ContactTable extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            contactList: [],
-            contactClassType: ''
-        }
     }
-    componentDidMount(){
-        this.setState({
-            contactList: this.props.contactData,
-        })
-    }
-    editContactData = event =>{
-        this.props.editContactData(event,false)
+    editContactData = event => {
+        this.props.editContactData(event, false)
     }
     render() {
         let newContactList = [];
         if (this.props.classType !== "*") {
-            for (let i = 0; i < this.state.contactList.length; i++) {
-                if (this.props.classType === this.state.contactList[i].ClassId) {
-                    newContactList.push(this.state.contactList[i])
+            for (let i = 0; i < this.props.contactData.length; i++) {
+                if (this.props.classType === this.props.contactData[i].ClassId) {
+                    newContactList.push(this.props.contactData[i])
                 }
             }
         }
         else {
-            for (let i = 0; i < this.state.contactList.length; i++) {
-                newContactList.push(this.state.contactList[i])
+            for (let i = 0; i < this.props.contactData.length; i++) {
+                newContactList.push(this.props.contactData[i])
             }
         }
         return (
@@ -51,7 +44,7 @@ class ContactTable extends React.Component {
                                     <td>{contacts.Email}</td>
                                     <td>{contacts.Phone}</td>
                                     <td>{contacts.Address}</td>
-                                    <td className="editbutton"><button className="back" onClick={this.editContactData.bind(this,contacts)}>修改</button></td>
+                                    <td className="editbutton"><button className="back" onClick={this.editContactData.bind(this, contacts)}>修改</button></td>
                                 </tr>
                             )
                             }
@@ -63,4 +56,10 @@ class ContactTable extends React.Component {
     }
 }
 
-export default ContactTable;
+const useReduxProps = state => {
+    return {
+        contactData: state.contactData
+    }
+}
+
+export default connect(useReduxProps)(ContactTable);
