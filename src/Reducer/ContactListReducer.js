@@ -8,7 +8,7 @@ const initialState = {
 
 const ContactListReducer = (state = initialState, action) => {
     switch (action.type) {
-        case "openAddList":
+        case "editContactData":
             return {
                 contactData: state.contactData,
                 editContactData: action.editContactData,
@@ -35,12 +35,6 @@ const ContactListReducer = (state = initialState, action) => {
                     }
                 }
                 break;
-            }
-        case "editContactData":
-            return {
-                contactData: state.contactData,
-                editContactData: action.editContactData,
-                contactAddMode: action.contactAddMode,
             }
         case "delContactList":
             for (let i = 0; i < state.contactData.length; i++) {

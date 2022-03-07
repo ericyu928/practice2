@@ -28,7 +28,7 @@ class Contact extends React.Component {
         this.setState({
             showContactAdd: true,
         })
-        this.props.openAddList({
+        this.props.editContact({
             ContactId: Math.random().toString(),
             ClassId: this.props.contacttypelist[0].ClassId,
             Name: '',
@@ -104,7 +104,7 @@ const useReduxProps = state => {
 const useReduxSelector = dispatch => {
     return {
         delContactList: (contactId) => dispatch({ type: 'delContactList', contactId: contactId }),
-        openAddList: (editContactData, contactAddMode) => dispatch({ type: 'openAddList', editContactData: editContactData, contactAddMode: contactAddMode })
+        editContact: (editContactData, contactAddMode) => dispatch({ type: 'editContactData', editContactData: editContactData, contactAddMode: contactAddMode })
     }
 }
 

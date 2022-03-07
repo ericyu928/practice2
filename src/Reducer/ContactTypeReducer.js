@@ -8,12 +8,6 @@ const initialState = {
 
 const ContactTypeReducer = (state = initialState, action) => {
     switch (action.type) {
-        case "openClassAdd":
-            return {
-                contacttypelist: state.contacttypelist,
-                editContactType: action.editContactType,
-                classAddMode: action.classAddMode
-            }
         case "openClassEdit":
             return {
                 contacttypelist: state.contacttypelist,
