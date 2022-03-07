@@ -64,10 +64,10 @@ const useReduxProps = state => {
     }
 }
 
-const useReduxSelector = dispatch =>{
-    return{
-        editContact:(contact,addMode)=>dispatch({type:'editContactData',editContactData:contact,contactAddMode:addMode})
+const useReduxSelector = dispatch => {
+    return {
+        editContact: (contact, addMode) => dispatch({ type: 'editContactData', editContactData: contact, contactAddMode: addMode })
     }
 }
 
-export default connect(useReduxProps,useReduxSelector)(ContactTable);
+export default connect(useReduxProps, useReduxSelector)(ContactTable);

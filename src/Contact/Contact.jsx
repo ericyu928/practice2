@@ -76,7 +76,7 @@ class Contact extends React.Component {
                         </div>
                         <div>
                             <label className="textlabel" style={{ marginLeft: 30 }}>類別</label>
-                            <ContactType typeSelected={this.contactTypeSelect} />
+                            <ContactType typeSelected={this.contactTypeSelect} classType={this.state.classType} />
                             <button className="enter" type="button" onClick={this.openAddList}>新增</button>
                         </div>
                         <ContactTable classType={this.state.classType} contactData={this.props.contactData}
