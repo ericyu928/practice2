@@ -9,7 +9,6 @@ class ContactTable extends React.Component {
     editContactData = event => {
         this.props.editContact(event, false);
         this.props.editContactData();
-
     }
     render() {
         let newContactList = [];

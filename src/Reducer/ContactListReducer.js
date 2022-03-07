@@ -10,6 +10,7 @@ const ContactListReducer = (state = initialState, action) => {
     switch (action.type) {
         case "editContactData":
             return {
+                ...state,
                 contactData: state.contactData,
                 editContactData: action.editContactData,
                 contactAddMode: action.contactAddMode,
@@ -17,6 +18,7 @@ const ContactListReducer = (state = initialState, action) => {
         case "saveContactData":
             if (action.contactAddMode) {
                 return {
+                    ...state,
                     contactData: [...state.contactData, action.editContactData],
                     editContactData: [],
                     contactAddMode: state.contactAddMode,
@@ -28,6 +30,7 @@ const ContactListReducer = (state = initialState, action) => {
                         const newItems = [...state.contactData];
                         newItems[i] = action.editContactData;
                         return {
+                            ...state,
                             contactData: newItems,
                             editContactData: [],
                             contactAddMode: state.contactAddMode,
@@ -42,6 +45,7 @@ const ContactListReducer = (state = initialState, action) => {
                     const newItems = [...state.contactData];
                     newItems.splice(i, 1);
                     return {
+                        ...state,
                         contactData: newItems,
                         editContactData: state.editContactData,
                         contactAddMode: state.contactAddMode,

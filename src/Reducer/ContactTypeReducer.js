@@ -10,6 +10,7 @@ const ContactTypeReducer = (state = initialState, action) => {
     switch (action.type) {
         case "openClassEdit":
             return {
+                ...state,
                 contacttypelist: state.contacttypelist,
                 editContactType: action.editContactType,
                 classAddMode: action.classAddMode
@@ -17,6 +18,7 @@ const ContactTypeReducer = (state = initialState, action) => {
         case "saveContactType":
             if (state.classAddMode) {
                 return {
+                    ...state,
                     contacttypelist: [...state.contacttypelist, action.newClass],
                     editContactType: state.editContactType,
                     classAddMode: state.classAddMode
@@ -28,6 +30,7 @@ const ContactTypeReducer = (state = initialState, action) => {
                         const newItems = [...state.contacttypelist];
                         newItems[i].Name = action.newClass.Name;
                         return {
+                            ...state,
                             contacttypelist: newItems,
                             editContactType: state.editContactType,
                             classAddMode: state.classAddMode
@@ -42,6 +45,7 @@ const ContactTypeReducer = (state = initialState, action) => {
                     const newItems = [...state.contacttypelist];
                     newItems.splice(i, 1);
                     return {
+                        ...state,
                         contacttypelist: newItems,
                         editContactType: state.editContactType,
                         classAddMode: state.classAddMode
