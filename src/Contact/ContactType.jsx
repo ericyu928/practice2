@@ -1,26 +1,30 @@
 import React from "react";
+import { connect } from 'react-redux';
 
 
-class ContactType extends React.Component{
-    constructor(props){
+class ContactType extends React.Component {
+    constructor(props) {
         super(props);
-        this.state={
-            contactclass:this.props.contacttypeList
-        }
     }
-    classTypeChange = event =>{
+    classTypeChange = event => {
         this.props.typeSelected(event.target.value)
     }
-    render(){
-        return(
-               <select className="classtype" onChange={this.classTypeChange}>
-                   <option value="*">全部</option>
-                   {this.state.contactclass.map((c_class)=>
-                       <option key={c_class.ClassId} value={c_class.ClassId}>{c_class.Name}</option>
-                   )}
-               </select> 
+    render() {
+        return (
+            <select className="classtype" onChange={this.classTypeChange}>
+                <option value="*">全部</option>
+                {this.props.contacttypelist.map((c_class) =>
+                    <option key={c_class.ClassId} value={c_class.ClassId}>{c_class.Name}</option>
+                )}
+            </select>
         )
     }
 }
 
-export default ContactType;
+const useReduxProps = state => {
+    return {
+        contacttypelist: state.ContactTypeReducer.contacttypelist
+    }
+}
+
+export default connect(useReduxProps)(ContactType);

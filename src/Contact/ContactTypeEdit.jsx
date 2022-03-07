@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 
 import TypeError from "./TypeError";
 
@@ -6,27 +7,9 @@ class ContactTypeEdit extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: '',
-            ClassId: '',
-            addMode: false,
+            name: this.props.editContactType.Name,
+            ClassId: this.props.editContactType.ClassId,
             errorType: false
-        }
-    }
-    componentDidMount(){
-        this.setState({
-            name: this.props.onClickName,
-            ClassId: this.props.onClickClassId,
-            addMode: this.props.addMode
-        })
-    }
-    componentDidUpdate(prevProps, prevState) {
-        if (!this.state.addMode) {
-            if (prevProps.onClickClassId !== this.props.onClickClassId) {
-                this.setState({
-                    name: this.props.onClickName,
-                    ClassId: this.props.onClickClassId
-                })
-            }
         }
     }
     nameTyped = event => {
@@ -35,37 +18,36 @@ class ContactTypeEdit extends React.Component {
         })
     }
     saveClick = event => {
-        let newClass = [];
-        if (this.state.name === "" && event) {
+        if (event && this.state.name === "") {
             this.setState({
                 errorType: true
             })
         }
         else {
             if (event) {
-                if (!this.state.addMode) {
+                let newClass = [];
+                if (!this.props.classAddMode) {
                     newClass = {
-                        ClassId: this.state.ClassId,
+                        ClassId: this.props.editContactType.ClassId,
                         Name: this.state.name,
-                        UserId: 'Eric'
+                        UserId: this.props.editContactType.UserId
                     }
                 }
                 else {
                     newClass = {
-                        ClassId: Math.random().toString(),
+                        ClassId: this.props.editContactType.ClassId,
                         Name: this.state.name,
-                        UserId: 'Eric'
+                        UserId: this.props.editContactType.UserId
                     }
                 }
+                this.props.saveClick(newClass)
+
             }
-
-            this.props.onEdit(newClass)
-            this.setState({ name: '' })
+            this.props.onEdit()
         }
-
     }
     isAddMode = () => {
-        if (!this.state.addMode) {
+        if (!this.props.classAddMode) {
             return <label>修改類別</label>
         }
         else {
@@ -76,7 +58,7 @@ class ContactTypeEdit extends React.Component {
         this.props.onDelete(this.state.ClassId)
     }
     deleteButton = () => {
-        if (!this.state.addMode) {
+        if (!this.props.classAddMode) {
             return <button className="del" onClick={this.deleteContact}>刪除</button>
         }
         else {
@@ -109,9 +91,21 @@ class ContactTypeEdit extends React.Component {
                         </div>
                     </div>}
             </div>
-
         )
     }
 }
 
-export default ContactTypeEdit;
+const useReduxProps = state => {
+    return {
+        classAddMode: state.ContactTypeReducer.classAddMode,
+        editContactType: state.ContactTypeReducer.editContactType
+    }
+}
+
+const useReduxSelector = dispatch => {
+    return {
+        saveClick: (newClass) => dispatch({ type: 'saveContactType', newClass: newClass })
+    }
+}
+
+export default connect(useReduxProps, useReduxSelector)(ContactTypeEdit);

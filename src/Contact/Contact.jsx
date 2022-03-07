@@ -27,18 +27,16 @@ class Contact extends React.Component {
     openAddList = () => {
         this.setState({
             showContactAdd: true,
-            addMode: true,
-            editContactData: {
-                ContactId: Math.random().toString(),
-                ClassId: this.props.contacttypelist[0].ClassId,
-                Name: '',
-                Sex: '男',
-                Phone: '',
-                Address: '',
-                Email: ''
-            }
-
         })
+        this.props.openAddList({
+            ContactId: Math.random().toString(),
+            ClassId: this.props.contacttypelist[0].ClassId,
+            Name: '',
+            Sex: '男',
+            Phone: '',
+            Address: '',
+            Email: ''
+        },true);
     }
     contactTypeSelect = (typeValue) => {
         this.setState({
@@ -55,26 +53,9 @@ class Contact extends React.Component {
             showContactAdd: onshow,
         })
     }
-    setContactTypeList = (contacttype) => {
+    editData = () => {
         this.setState({
-            contacttypelist: contacttype
-        })
-    }
-    setContactList = (contact) => {
-        if (contact.length !== 0) {
-            if (this.state.addMode) {
-                this.props.addContactList(contact);
-            }
-            else {
-                this.props.editContactList(contact);
-            }
-        }
-    }
-    editData = (ContactData, mode) => {
-        this.setState({
-            editContactData: ContactData,
-            showContactAdd: true,
-            addMode: mode
+            showContactAdd: true
         })
     }
     contactDeleted = (contactId) => {
@@ -84,8 +65,7 @@ class Contact extends React.Component {
     render() {
         return (
             <div className="container">
-                {this.state.showContactTypeList && <ContactTypeList onShow={this.showContactClassType}
-                    onContactTypeList={this.setContactTypeList} contacttypeList={this.props.contacttypelist} />}
+                {this.state.showContactTypeList && <ContactTypeList onShow={this.showContactClassType} />}
                 {!this.state.showContactTypeList && !this.state.showContactAdd ?
                     <div>
                         <div className='contacttypetitle'>
@@ -96,7 +76,7 @@ class Contact extends React.Component {
                         </div>
                         <div>
                             <label className="textlabel" style={{ marginLeft: 30 }}>類別</label>
-                            <ContactType typeSelected={this.contactTypeSelect} contacttypeList={this.props.contacttypelist} />
+                            <ContactType typeSelected={this.contactTypeSelect} />
                             <button className="enter" type="button" onClick={this.openAddList}>新增</button>
                         </div>
                         <ContactTable classType={this.state.classType} contactData={this.props.contactData}
@@ -106,11 +86,7 @@ class Contact extends React.Component {
                     :
                     <div></div>
                 }
-                {this.state.showContactAdd && <ContactAdd onShow={this.showContactAdd} onDelete={this.contactDeleted}
-                    onContactList={this.setContactList}
-                    onContactData={this.state.editContactData}
-                    addMode={this.state.addMode}
-                    contactClassList={this.props.contacttypelist} />}
+                {this.state.showContactAdd && <ContactAdd onShow={this.showContactAdd} onDelete={this.contactDeleted} />}
             </div>
 
 
@@ -120,15 +96,15 @@ class Contact extends React.Component {
 
 const useReduxProps = state => {
     return {
-        contacttypelist: state.contacttypelist,
-        contactData: state.contactData
+        contacttypelist: state.ContactTypeReducer.contacttypelist,
+        contactData: state.ContactListReducer.contactData,
+        contactAddMode: state.ContactListReducer.contactAddMode
     }
 }
 const useReduxSelector = dispatch => {
     return {
-        addContactList: (contact) => dispatch({ type: 'addContactList', contact: contact }),
-        editContactList: (contact) => dispatch({ type: 'editContactList', contact: contact }),
         delContactList: (contactId) => dispatch({ type: 'delContactList', contactId: contactId }),
+        openAddList: (editContactData, contactAddMode) => dispatch({ type: 'openAddList', editContactData: editContactData, contactAddMode: contactAddMode })
     }
 }
 

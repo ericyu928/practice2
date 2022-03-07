@@ -9,43 +9,27 @@ class ContactTypeList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            contactclasslist: [],
             contactTypeEdit: false,
-            newclass: [],
-            clickClassId: '',
-            clickName: '',
-            addMode: true,
             deleteClassId: ''
         }
     }
-    componentDidMount() {
-        this.setState({
-            contactclasslist: this.props.contacttypeList
-        })
-    }
     editContactType = () => {
         this.setState({
-            contactTypeEdit: true,
-            addMode: true,
-            clickClassId: Math.random().toString(),
-            clickName: ''
+            contactTypeEdit: true
+        })
+        this.props.openClassAdd(true, {
+            ClassId: Math.random().toString(),
+            Name: '',
+            UserId: 'Eric'
         })
     }
-    classEdited = (newClass) => {
+    classEdited = () => {
         this.setState({
             contactTypeEdit: false
         })
-        if (newClass.length !== 0 && newClass.Name !== "") {
-            if (this.state.addMode) {
-                this.props.addContactTypeList(newClass);
-            }
-            else {
-                this.props.editContactTypeList(newClass);
-            }
-        }
     }
     classDeleted = (classId) => {
-         this.setState({
+        this.setState({
             contactTypeEdit: false
         })
         this.props.deleteContactTypeList(classId);
@@ -53,15 +37,15 @@ class ContactTypeList extends React.Component {
     }
     editClass = event => {
         this.setState({
-            contactTypeEdit: true,
-            clickClassId: event.ClassId,
-            clickName: event.Name,
-            addMode: false
+            contactTypeEdit: true
+        })
+        this.props.openClassEdit(false, {
+            ClassId: event.ClassId,
+            Name: event.Name
         })
     }
     hideContactType = () => {
         this.props.onShow(false)
-        this.props.onContactTypeList(this.props.contacttypelist)
     }
     render() {
         return (
@@ -97,8 +81,7 @@ class ContactTypeList extends React.Component {
                 <div>
                     {this.state.contactTypeEdit && <ContactTypeEdit onEdit={this.classEdited} onDelete={this.classDeleted}
                         onClickClassId={this.state.clickClassId}
-                        onClickName={this.state.clickName}
-                        addMode={this.state.addMode} />}
+                        onClickName={this.state.clickName} />}
                 </div>
             </div>
         )
@@ -107,15 +90,17 @@ class ContactTypeList extends React.Component {
 
 const useReduxProps = state => {
     return {
-        contacttypelist: state.contacttypelist
+        contacttypelist: state.ContactTypeReducer.contacttypelist,
+        classAddMode: state.ContactTypeReducer.classAddMode
     }
 }
 
 const useReduxSelector = dispatch => {
     return {
-        addContactTypeList: (newClass) => dispatch({ type: 'addContactTypeList', newClass: newClass }),
-        editContactTypeList: (newClass) => dispatch({ type: 'editContactTypeList', newClass: newClass }),
         deleteContactTypeList: (classId) => dispatch({ type: 'deleteContactTypeList', classId: classId }),
+        openClassAdd: (classAddMode, editContactType) => dispatch({ type: 'openClassAdd', classAddMode: classAddMode, editContactType: editContactType }),
+        openClassEdit: (classAddMode, editContactType) => dispatch({ type: 'openClassEdit', classAddMode: classAddMode, editContactType: editContactType }),
+
     }
 }
 

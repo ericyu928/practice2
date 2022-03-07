@@ -1,60 +1,22 @@
 import React from "react";
 
+import { connect } from 'react-redux';
 import TypeError from "./TypeError";
 
 class ContactAdd extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            classid: '',
-            className: '',
-            contactId: '',
-            name: '',
-            sex: '',
-            email: '',
-            phone: '',
-            address: '',
-            addMode: false,
+            contactId: this.props.contactId,
+            name: this.props.name,
+            sex: this.props.sex,
+            email: this.props.email,
+            phone: this.props.phone,
+            address: this.props.address,
             contactData: '',
             errorType: false
 
         }
-    }
-    componentDidMount(){
-        let cName;
-        let cId;
-        let conId;
-        if (this.props.onContactData.ClassId !== "") {
-            cId = this.props.onContactData.ClassId;
-            for (let i = 0; i < this.props.contactClassList.length; i++) {
-                if (this.props.contactClassList[i].ClassId === this.props.onContactData.ClassId) {
-                    cName = this.props.contactClassList[i].Name
-                    break;
-                }
-            }
-        }
-        else {
-            cId = this.props.contactClassList[0].ClassId
-            cName = this.props.contactClassList[0].Name
-        }
-        if (this.props.onContactData.ContactId === "") {
-            conId = Math.random().toString();
-        }
-        else {
-            conId = this.props.onContactData.ContactId
-        }
-        this.setState({
-            classid: cId,
-            className: cName,
-            contactId: conId,
-            name: this.props.onContactData.Name,
-            sex: this.props.onContactData.Sex,
-            email: this.props.onContactData.Email,
-            phone: this.props.onContactData.Phone,
-            address: this.props.onContactData.Address,
-            addMode: this.props.addMode,
-            contactData: this.props.onContactData,
-        })
     }
     nameTyped = event => {
         this.setState({
@@ -93,20 +55,20 @@ class ContactAdd extends React.Component {
             if (event) {
                 editContactList = {
                     ContactId: this.state.contactId,
-                    ClassId: this.state.classid,
+                    ClassId: this.props.classid,
                     Name: this.state.name,
                     Sex: this.state.sex,
                     Phone: this.state.phone,
                     Address: this.state.address,
                     Email: this.state.email
                 }
+                this.props.saveClick(editContactList,this.props.contactAddMode)
             }
-            this.props.onContactList(editContactList)
             this.props.onShow(false)
         }
     }
     isAddMode = () => {
-        if (!this.state.addMode) {
+        if (!this.props.contactAddMode) {
             return <label>修改通訊錄</label>
         }
         else {
@@ -117,7 +79,7 @@ class ContactAdd extends React.Component {
         this.props.onDelete(this.state.contactId)
     }
     deleteButton = () => {
-        if (!this.state.addMode) {
+        if (!this.props.contactAddMode) {
             return <button className="del" onClick={this.deleteContact}>刪除</button>
         }
         else {
@@ -138,7 +100,7 @@ class ContactAdd extends React.Component {
                     <br></br>
                     <div>
                         <label className="textlabel">類別</label>
-                        <input className="readonly" type="text" value={this.state.className} readOnly="readonly"></input>
+                        <input className="readonly" type="text" value={this.props.className} readOnly="readonly"></input>
                     </div>
                     <div>
                         <label className="textlabel">姓名</label>
@@ -173,4 +135,46 @@ class ContactAdd extends React.Component {
     }
 }
 
-export default ContactAdd;
+const useReduxProps = state => {
+    let cName;
+    let cId;
+    let conId;
+    if (state.ContactListReducer.editContactData.ClassId !== "") {
+        cId = state.ContactListReducer.editContactData.ClassId;
+        for (let i = 0; i < state.ContactTypeReducer.contacttypelist.length; i++) {
+            if (state.ContactTypeReducer.contacttypelist[i].ClassId === state.ContactListReducer.editContactData.ClassId) {
+                cName = state.ContactTypeReducer.contacttypelist[i].Name
+                break;
+            }
+        }
+    }
+    else {
+        cId = state.ContactTypeReducer.contacttypelist[0].ClassId
+        cName = state.ContactTypeReducer.contacttypelist[0].Name
+    }
+    if (state.ContactListReducer.editContactData.ContactId === "") {
+        conId = Math.random().toString();
+    }
+    else {
+        conId = state.ContactListReducer.editContactData.ContactId
+    }
+    return {
+        classid: cId,
+        className: cName,
+        contactId: conId,
+        name: state.ContactListReducer.editContactData.Name,
+        sex: state.ContactListReducer.editContactData.Sex,
+        email: state.ContactListReducer.editContactData.Email,
+        phone: state.ContactListReducer.editContactData.Phone,
+        address: state.ContactListReducer.editContactData.Address,
+        contactAddMode:state.ContactListReducer.contactAddMode
+    }
+}
+const useReduxSelector = dispatch => {
+    return {
+        saveClick: (editContactData,contactAddMode) => dispatch({ type: 'saveContactData', editContactData: editContactData,contactAddMode: contactAddMode  })
+    }
+}
+
+
+export default connect(useReduxProps, useReduxSelector)(ContactAdd);

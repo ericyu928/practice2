@@ -7,7 +7,9 @@ class ContactTable extends React.Component {
         super(props);
     }
     editContactData = event => {
-        this.props.editContactData(event, false)
+        this.props.editContact(event, false);
+        this.props.editContactData();
+
     }
     render() {
         let newContactList = [];
@@ -58,8 +60,14 @@ class ContactTable extends React.Component {
 
 const useReduxProps = state => {
     return {
-        contactData: state.contactData
+        contactData: state.ContactListReducer.contactData,
     }
 }
 
-export default connect(useReduxProps)(ContactTable);
+const useReduxSelector = dispatch =>{
+    return{
+        editContact:(contact,addMode)=>dispatch({type:'editContactData',editContactData:contact,contactAddMode:addMode})
+    }
+}
+
+export default connect(useReduxProps,useReduxSelector)(ContactTable);
