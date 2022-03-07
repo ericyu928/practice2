@@ -5,8 +5,8 @@ import ContactTypeReducer from '../Reducer/ContactTypeReducer';
 
 
 const stateStoreReducer = combineReducers({
-    ContactListReducer,
-    ContactTypeReducer
+   Data: ContactListReducer,
+   List: ContactTypeReducer
 });
 
 const stateStore = createStore(stateStoreReducer);

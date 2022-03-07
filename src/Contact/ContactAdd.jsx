@@ -137,35 +137,35 @@ const useReduxProps = state => {
     let cName;
     let cId;
     let conId;
-    if (state.ContactListReducer.editContactData.ClassId !== "") {
-        cId = state.ContactListReducer.editContactData.ClassId;
-        for (let i = 0; i < state.ContactTypeReducer.contacttypelist.length; i++) {
-            if (state.ContactTypeReducer.contacttypelist[i].ClassId === state.ContactListReducer.editContactData.ClassId) {
-                cName = state.ContactTypeReducer.contacttypelist[i].Name
+    if (state.Data.editContactData.ClassId !== "") {
+        cId = state.Data.editContactData.ClassId;
+        for (let i = 0; i < state.List.contacttypelist.length; i++) {
+            if (state.List.contacttypelist[i].ClassId === state.Data.editContactData.ClassId) {
+                cName = state.List.contacttypelist[i].Name
                 break;
             }
         }
     }
     else {
-        cId = state.ContactTypeReducer.contacttypelist[0].ClassId
-        cName = state.ContactTypeReducer.contacttypelist[0].Name
+        cId = state.List.contacttypelist[0].ClassId
+        cName = state.List.contacttypelist[0].Name
     }
-    if (state.ContactListReducer.editContactData.ContactId === "") {
+    if (state.Data.editContactData.ContactId === "") {
         conId = Math.random().toString();
     }
     else {
-        conId = state.ContactListReducer.editContactData.ContactId
+        conId = state.Data.editContactData.ContactId
     }
     return {
         classid: cId,
         className: cName,
         contactId: conId,
-        name: state.ContactListReducer.editContactData.Name,
-        sex: state.ContactListReducer.editContactData.Sex,
-        email: state.ContactListReducer.editContactData.Email,
-        phone: state.ContactListReducer.editContactData.Phone,
-        address: state.ContactListReducer.editContactData.Address,
-        contactAddMode:state.ContactListReducer.contactAddMode
+        name: state.Data.editContactData.Name,
+        sex: state.Data.editContactData.Sex,
+        email: state.Data.editContactData.Email,
+        phone: state.Data.editContactData.Phone,
+        address: state.Data.editContactData.Address,
+        contactAddMode:state.Data.contactAddMode
     }
 }
 const useReduxSelector = dispatch => {

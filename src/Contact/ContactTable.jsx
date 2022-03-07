@@ -60,7 +60,7 @@ class ContactTable extends React.Component {
 
 const useReduxProps = state => {
     return {
-        contactData: state.ContactListReducer.contactData,
+        contactData: state.Data.contactData,
     }
 }
 

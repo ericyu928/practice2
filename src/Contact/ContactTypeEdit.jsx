@@ -84,8 +84,8 @@ class ContactTypeEdit extends React.Component {
 
 const useReduxProps = state => {
     return {
-        classAddMode: state.ContactTypeReducer.classAddMode,
-        editContactType: state.ContactTypeReducer.editContactType
+        classAddMode: state.List.classAddMode,
+        editContactType: state.List.editContactType
     }
 }
 
