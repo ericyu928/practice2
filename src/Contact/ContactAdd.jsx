@@ -13,9 +13,7 @@ class ContactAdd extends React.Component {
             email: this.props.email,
             phone: this.props.phone,
             address: this.props.address,
-            contactData: '',
             errorType: false
-
         }
     }
     nameTyped = event => {

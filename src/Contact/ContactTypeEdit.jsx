@@ -8,7 +8,6 @@ class ContactTypeEdit extends React.Component {
         super(props);
         this.state = {
             name: this.props.editContactType.Name,
-            ClassId: this.props.editContactType.ClassId,
             errorType: false
         }
     }
@@ -25,23 +24,11 @@ class ContactTypeEdit extends React.Component {
         }
         else {
             if (event) {
-                let newClass = [];
-                if (!this.props.classAddMode) {
-                    newClass = {
-                        ClassId: this.props.editContactType.ClassId,
-                        Name: this.state.name,
-                        UserId: this.props.editContactType.UserId
-                    }
-                }
-                else {
-                    newClass = {
-                        ClassId: this.props.editContactType.ClassId,
-                        Name: this.state.name,
-                        UserId: this.props.editContactType.UserId
-                    }
-                }
-                this.props.saveClick(newClass)
-
+                this.props.saveClick({
+                    ClassId: this.props.editContactType.ClassId,
+                    Name: this.state.name,
+                    UserId: this.props.editContactType.UserId
+                })
             }
             this.props.onEdit()
         }
@@ -55,7 +42,7 @@ class ContactTypeEdit extends React.Component {
         }
     }
     deleteContact = () => {
-        this.props.onDelete(this.state.ClassId)
+        this.props.onDelete(this.props.editContactType.ClassId)
     }
     deleteButton = () => {
         if (!this.props.classAddMode) {
