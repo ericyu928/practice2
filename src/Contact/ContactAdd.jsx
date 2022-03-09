@@ -1,178 +1,147 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from 'react-redux';
 
-import { connect } from 'react-redux';
 import TypeError from "./TypeError";
 
-class ContactAdd extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            contactId: this.props.contactId,
-            name: this.props.name,
-            sex: this.props.sex,
-            email: this.props.email,
-            phone: this.props.phone,
-            address: this.props.address,
-            errorType: false
-        }
-    }
-    nameTyped = event => {
-        this.setState({
-            name: event.target.value
-        })
-    }
-    sexTyped = event => {
-        this.setState({
-            sex: event.target.value
-        })
-    }
-    emailTyped = event => {
-        this.setState({
-            email: event.target.value
-        })
-    }
-    phoneTyped = event => {
-        this.setState({
-            phone: event.target.value
-        })
-    }
-    addressTyped = event => {
-        this.setState({
-            address: event.target.value
-        })
-    }
-    onClickSave = event => {
-        let editContactList = []
-        if (event && (this.state.name === "" || this.state.phone === "" || this.state.address === "" ||
-            this.state.email === "")) {
-            this.setState({
-                errorType: true
-            })
-        }
-        else {
-            if (event) {
-                editContactList = {
-                    ContactId: this.state.contactId,
-                    ClassId: this.props.classid,
-                    Name: this.state.name,
-                    Sex: this.state.sex,
-                    Phone: this.state.phone,
-                    Address: this.state.address,
-                    Email: this.state.email
-                }
-                this.props.saveClick(editContactList,this.props.contactAddMode)
-            }
-            this.props.onShow(false)
-        }
-    }
-    isAddMode = () => {
-        if (!this.props.contactAddMode) {
-            return <label>修改通訊錄</label>
-        }
-        else {
-            return <label>新增通訊錄</label>
-        }
-    }
-    deleteContact = () => {
-        this.props.onDelete(this.state.contactId)
-    }
-    deleteButton = () => {
-        if (!this.props.contactAddMode) {
-            return <button className="del" onClick={this.deleteContact}>刪除</button>
-        }
-        else {
-            return <div style={{ display: "none" }}></div>
-        }
-    }
-    checkTyped = (onOk) => {
-        this.setState({
-            errorType: onOk
-        })
-    }
-    render() {
-        return (
-            <div>
-                {this.state.errorType && <TypeError onCheck={this.checkTyped} />}
-                {!this.state.errorType && <div>
-                    <this.isAddMode />
-                    <br></br>
-                    <div>
-                        <label className="textlabel">類別</label>
-                        <input className="readonly" type="text" value={this.props.className} readOnly="readonly"></input>
-                    </div>
-                    <div>
-                        <label className="textlabel">姓名</label>
-                        <input type="text" value={this.state.name} placeholder="姓名" onChange={this.nameTyped}></input>
-                    </div>
-                    <div>
-                        <label className="textlabel">性別</label>
-                        <select value={this.state.sex} onChange={this.sexTyped}>
-                            <option value="男">男</option>
-                            <option value="女">女</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label className="textlabel">Email</label>
-                        <input type="email" value={this.state.email} placeholder="Email" onChange={this.emailTyped}></input>
-                    </div>
-                    <div>
-                        <label className="textlabel">電話</label>
-                        <input type="text" value={this.state.phone} placeholder="電話" onChange={this.phoneTyped}></input>
-                    </div>
-                    <div>
-                        <label className="textlabel">地址</label>
-                        <input type="text" value={this.state.address} placeholder="地址" onChange={this.addressTyped}></input>
-                    </div>
-                    <button className="enter" type="button" onClick={this.onClickSave.bind(this, true)}>儲存</button>
-                    <this.deleteButton />
-                    <button className="back" type="button" onClick={this.onClickSave.bind(this, false)}>取消</button>
-                </div>
-                }
-            </div>
-        )
-    }
-}
+const ContactAdd = (props) => {
 
-const useReduxProps = state => {
-    let cName;
-    let cId;
-    let conId;
-    if (state.Data.editContactData.ClassId !== "") {
-        cId = state.Data.editContactData.ClassId;
-        for (let i = 0; i < state.List.contacttypelist.length; i++) {
-            if (state.List.contacttypelist[i].ClassId === state.Data.editContactData.ClassId) {
-                cName = state.List.contacttypelist[i].Name
+    const contactData = useSelector(state => state.Data.contactData);
+    const editContactData = useSelector(state => state.Data.editContactData);
+    const contactAddMode = useSelector(state => state.Data.contactAddMode);
+
+    const disPatch = useDispatch()
+
+    const saveContactData = (contactData) => disPatch({ type: 'saveContactData', contactData: contactData });
+
+    const [name, setName] = useState("");
+    const [sex, setSex] = useState("男");
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
+    const [address, setAddress] = useState("");
+    const [errorType, setErrorType] = useState(false);
+
+    useEffect(() => {
+        let { Name, Sex, Email, Phone, Address } = editContactData;
+        setName(Name);
+        setSex(Sex);
+        setEmail(Email);
+        setPhone(Phone);
+        setAddress(Address);
+
+    }, [])
+    const nameTyped = event => {
+        setName(event.target.value)
+    }
+    const sexTyped = event => {
+        setSex(event.target.value)
+    }
+    const emailTyped = event => {
+        setEmail(event.target.value)
+    }
+    const phoneTyped = event => {
+        setPhone(event.target.value)
+    }
+    const addressTyped = event => {
+        setAddress(event.target.value)
+    }
+    const onCancel = () => {
+        props.onEditContact(false)
+    }
+    const deleteContact = () => {
+        let newItems = [];
+        for (let i = 0; i < contactData.length; i++) {
+            if (editContactData.ContactId === contactData[i].ContactId) {
+                newItems = [...contactData];
+                newItems.splice(i, 1);
                 break;
             }
         }
+        saveContactData(newItems)
+        props.onDelete()//刪除關閉編輯頁
     }
-    else {
-        cId = state.List.contacttypelist[0].ClassId
-        cName = state.List.contacttypelist[0].Name
+
+    const checkTyped = () => {
+        setErrorType(false)
     }
-    if (state.Data.editContactData.ContactId === "") {
-        conId = Math.random().toString();
+    const formsubmit = (event) => {
+        event.preventDefault();
+        if (name === "" || phone === "" || address === "" || email === "") {
+            setErrorType(true)
+        }
+        else {
+            if (contactAddMode) {
+                saveContactData([...contactData,
+                {
+                    ContactId: editContactData.ContactId,
+                    ClassId: editContactData.ClassId,
+                    Classname: editContactData.Classname,
+                    Name: name,
+                    Sex: sex,
+                    Phone: phone,
+                    Address: address,
+                    Email: email
+                }])
+            }
+            else {
+                let newItems = [];
+                for (let i = 0; i < contactData.length; i++) {
+                    if (editContactData.ContactId === contactData[i].ContactId) {
+                        newItems = [...contactData];
+                        newItems[i] = {
+                            ContactId: editContactData.ContactId,
+                            ClassId: editContactData.ClassId,
+                            Classname: editContactData.Classname,
+                            Name: name,
+                            Sex: sex,
+                            Phone: phone,
+                            Address: address,
+                            Email: email
+                        };
+                        break;
+                    }
+                }
+                saveContactData(newItems);
+            }
+            props.onEditContact(false)
+        }
     }
-    else {
-        conId = state.Data.editContactData.ContactId
-    }
-    return {
-        classid: cId,
-        className: cName,
-        contactId: conId,
-        name: state.Data.editContactData.Name,
-        sex: state.Data.editContactData.Sex,
-        email: state.Data.editContactData.Email,
-        phone: state.Data.editContactData.Phone,
-        address: state.Data.editContactData.Address,
-        contactAddMode:state.Data.contactAddMode
-    }
-}
-const useReduxSelector = dispatch => {
-    return {
-        saveClick: (editContactData,contactAddMode) => dispatch({ type: 'saveContactData', editContactData: editContactData,contactAddMode: contactAddMode  })
-    }
-}
 
 
-export default connect(useReduxProps, useReduxSelector)(ContactAdd);
+    return (
+        <form onSubmit={formsubmit}>
+            {errorType && <TypeError onCheck={checkTyped} onVisible={errorType} />}
+            {!errorType && <div>
+                {contactAddMode && <label>新增通訊錄</label>}
+                {!contactAddMode && <label>修改通訊錄</label>}
+                <br></br>
+                <label className="textlabel">類別</label>
+                <input className="readonly" type="text" value={editContactData.Classname} readOnly="readonly"></input>
+
+                <label className="textlabel">姓名</label>
+                <input type="text" value={name} placeholder="姓名" onChange={nameTyped}></input>
+
+                <label className="textlabel">性別</label>
+                <select value={sex} onChange={sexTyped}>
+                    <option value="男">男</option>
+                    <option value="女">女</option>
+                </select>
+
+                <label className="textlabel">Email</label>
+                <input type="email" value={email} placeholder="Email" onChange={emailTyped}></input>
+
+                <label className="textlabel">電話</label>
+                <input type="text" value={phone} placeholder="電話" onChange={phoneTyped}></input>
+
+                <label className="textlabel">地址</label>
+                <input type="text" value={address} placeholder="地址" onChange={addressTyped}></input>
+
+                <button className="enter" type="submit">儲存</button>
+                {!contactAddMode && <button type="button" className="del" onClick={deleteContact}>刪除</button>}
+                <button className="back" type="button" onClick={onCancel}>取消</button>
+            </div>
+            }
+        </form>
+    )
+
+}
+export default ContactAdd;

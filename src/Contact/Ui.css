@@ -45,6 +45,7 @@
     height: 30px;
     margin-top: 10px;
     margin-right: 10px;
+    margin-bottom: 10px;
     color: white;
     background-color: rgb(70, 70, 245);
     border-radius:5px;
@@ -65,17 +66,17 @@
     border:none;
     cursor:pointer;
 }
-.container table{
+.container .tb{
     text-align:left;
     width: 90%;
 }
-.container table thead tr th{
+.container .tb thead tr th{
     border-bottom:2px solid rgba(0, 0, 0, 0.253);
 }
-.container table tbody tr td{
+.container .tb tbody tr td{
     border-bottom:2px solid rgb(235, 219, 219) !important; 
 }
-.container table tbody tr td.editbutton{
+.container .tb tbody tr td.editbutton{
     border-bottom:2px solid rgb(255, 255, 255) !important; 
 }
 .container input{
@@ -108,4 +109,24 @@
     margin-right: 20px;
     border-radius:5px;
 
+}
+.container .ctype {
+    margin: 0px;
+}
+.container .ctype label{
+    margin-top: 10px;
+}
+.container .ctype p{
+    font-weight: bold;
+    font-size: 18px;
+}
+.container .ctype input{
+    font-size: 18px;
+    height: 30px;
+}
+.container .ctype button{
+    height: 30px;
+    margin-top: 10px;
+    margin-right: 10px;
+    border-radius:5px;
 }

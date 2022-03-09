@@ -1,25 +1,30 @@
 import React from "react";
+import { Modal,Button } from 'antd'
 
-class TypeError extends React.Component{
-    constructor(props){
+class TypeError extends React.Component {
+    constructor(props) {
         super(props);
-        this.state={
-            onCheck:false
+        this.state = {
+            onCheck: false
         }
     }
-    okClick =()=>{
-        this.props.onCheck(this.state.onCheck)
+    componentDidMount(){
+        this.setState({onCheck:this.props.onVisible})
     }
-    render(){
-        return(
-            <div>
-                <div>
-                    <label>尚有欄位未輸入</label>
-                </div>
-                <footer>
-                    <button className="del" onClick={this.okClick}>確定</button>
-                </footer>
-            </div>
+    okClick = () => {
+        this.setState({onCheck:false})
+
+        this.props.onCheck()
+    }
+    render() {
+        return (
+            <Modal title="警告" visible={this.state.onCheck}  footer={[
+                <Button key="submit" type="primary"  onClick={this.okClick}>
+                  OK
+                </Button>
+              ]} >
+                <p>尚有欄位未輸入</p>
+            </Modal>
         )
     }
 }

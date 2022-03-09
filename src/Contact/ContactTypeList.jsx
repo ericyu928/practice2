@@ -13,7 +13,7 @@ class ContactTypeList extends React.Component {
             deleteClassId: ''
         }
     }
-    editContactType = () => {
+    addContactType = () => {
         this.setState({
             contactTypeEdit: true
         })
@@ -28,14 +28,7 @@ class ContactTypeList extends React.Component {
             contactTypeEdit: false
         })
     }
-    classDeleted = (classId) => {
-        this.setState({
-            contactTypeEdit: false
-        })
-        this.props.deleteContactTypeList(classId);
-
-    }
-    editClass = event => {
+    handleEditClass = event => {
         this.setState({
             contactTypeEdit: true
         })
@@ -56,10 +49,10 @@ class ContactTypeList extends React.Component {
                     </div>
                     <div>
                         <button className="back" onClick={this.hideContactType}>返回</button>
-                        <button className="enter" onClick={this.editContactType}>新增</button>
+                        <button className="enter" onClick={this.addContactType}>新增</button>
                     </div>
                     <div>
-                        <table>
+                        <table className="tb">
                             <thead>
                                 <tr>
                                     <th>名稱</th>
@@ -69,7 +62,7 @@ class ContactTypeList extends React.Component {
                                 {this.props.contacttypelist.map((conlist) =>
                                     <tr key={conlist.ClassId}>
                                         <td>
-                                            <button className="classlistitem" onClick={this.editClass.bind(this, conlist)}>{conlist.Name}</button>
+                                            <button className="classlistitem" onClick={this.handleEditClass.bind(this, conlist)}>{conlist.Name}</button>
                                         </td>
                                     </tr>
                                 )}
@@ -79,9 +72,7 @@ class ContactTypeList extends React.Component {
                 </div>
                 }
                 <div>
-                    {this.state.contactTypeEdit && <ContactTypeEdit onEdit={this.classEdited} onDelete={this.classDeleted}
-                        onClickClassId={this.state.clickClassId}
-                        onClickName={this.state.clickName} />}
+                    {this.state.contactTypeEdit && <ContactTypeEdit onEdit={this.classEdited} />}
                 </div>
             </div>
         )
@@ -90,16 +81,13 @@ class ContactTypeList extends React.Component {
 
 const useReduxProps = state => {
     return {
-        contacttypelist: state.List.contacttypelist,
-        classAddMode: state.List.classAddMode
+        contacttypelist: state.List.contacttypelist
     }
 }
 
 const useReduxSelector = dispatch => {
     return {
-        deleteContactTypeList: (classId) => dispatch({ type: 'deleteContactTypeList', classId: classId }),
         openClassEdit: (classAddMode, editContactType) => dispatch({ type: 'openClassEdit', classAddMode: classAddMode, editContactType: editContactType }),
-
     }
 }
 

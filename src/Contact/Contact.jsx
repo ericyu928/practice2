@@ -15,8 +15,7 @@ class Contact extends React.Component {
         this.state = {
             showContactTypeList: false,
             showContactAdd: false,
-            classType: "*",
-            addMode: false,
+            classType: "*"
         }
     }
     openTypeList = () => {
@@ -31,12 +30,13 @@ class Contact extends React.Component {
         this.props.editContact({
             ContactId: Math.random().toString(),
             ClassId: this.props.contacttypelist[0].ClassId,
+            Classname: this.props.contacttypelist[0].Name,
             Name: '',
             Sex: '男',
             Phone: '',
             Address: '',
             Email: ''
-        },true);
+        }, true);
     }
     contactTypeSelect = (typeValue) => {
         this.setState({
@@ -53,13 +53,12 @@ class Contact extends React.Component {
             showContactAdd: onshow,
         })
     }
-    editData = () => {
+    openContactEdit = () => {
         this.setState({
             showContactAdd: true
         })
     }
     contactDeleted = (contactId) => {
-        this.props.delContactList(contactId);
         this.setState({ showContactAdd: false })
     }
     render() {
@@ -71,22 +70,16 @@ class Contact extends React.Component {
                         <div className='contacttypetitle'>
                             <button type="button" onClick={this.openTypeList}>類別維護</button>
                         </div>
-                        <div>
-                            <h1>通訊錄</h1>
-                        </div>
-                        <div>
-                            <label className="textlabel" style={{ marginLeft: 30 }}>類別</label>
-                            <ContactType typeSelected={this.contactTypeSelect} classType={this.state.classType} />
-                            <button className="enter" type="button" onClick={this.openAddList}>新增</button>
-                        </div>
-                        <ContactTable classType={this.state.classType} contactData={this.props.contactData}
-                            editContactData={this.editData}
-                        />
+                        <h1>通訊錄</h1>
+                        <label className="textlabel" style={{ marginLeft: 30 }}>類別</label>
+                        <ContactType typeSelected={this.contactTypeSelect} classType={this.state.classType} />
+                        <button className="enter" type="button" onClick={this.openAddList}>新增</button>
+                        <ContactTable classType={this.state.classType} openContactEdit={this.openContactEdit}/>
                     </div>
                     :
                     <div></div>
                 }
-                {this.state.showContactAdd && <ContactAdd onShow={this.showContactAdd} onDelete={this.contactDeleted} />}
+                {this.state.showContactAdd && <ContactAdd onEditContact={this.showContactAdd} onDelete={this.contactDeleted} />}
             </div>
 
 

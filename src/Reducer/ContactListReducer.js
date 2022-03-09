@@ -1,7 +1,17 @@
 import ContactData from "../ContactData.json";
+import ContactClass from "../ContactClass.json";
 
+let c = ContactData;
+for (let x = 0; x < ContactData.length; x++) {
+    for (let i = 0; i < ContactClass.length; i++) {
+        if (ContactData[x].ClassId === ContactClass[i].ClassId) {
+            c[x]["Classname"] = ContactClass[i].Name
+            break;
+        }
+    }
+}
 const initialState = {
-    contactData: ContactData,
+    contactData: c,
     editContactData: [],
     contactAddMode: false,
 }
@@ -16,43 +26,12 @@ const ContactListReducer = (state = initialState, action) => {
                 contactAddMode: action.contactAddMode,
             }
         case "saveContactData":
-            if (action.contactAddMode) {
-                return {
-                    ...state,
-                    contactData: [...state.contactData, action.editContactData],
-                    editContactData: [],
-                    contactAddMode: state.contactAddMode,
-                }
+            return {
+                ...state,
+                contactData: action.contactData,
+                editContactData: [],
+                contactAddMode: false
             }
-            else {
-                for (let i = 0; i < state.contactData.length; i++) {
-                    if (action.editContactData.ContactId === state.contactData[i].ContactId) {
-                        const newItems = [...state.contactData];
-                        newItems[i] = action.editContactData;
-                        return {
-                            ...state,
-                            contactData: newItems,
-                            editContactData: [],
-                            contactAddMode: state.contactAddMode,
-                        };
-                    }
-                }
-                break;
-            }
-        case "delContactList":
-            for (let i = 0; i < state.contactData.length; i++) {
-                if (action.contactId === state.contactData[i].ContactId) {
-                    const newItems = [...state.contactData];
-                    newItems.splice(i, 1);
-                    return {
-                        ...state,
-                        contactData: newItems,
-                        editContactData: state.editContactData,
-                        contactAddMode: state.contactAddMode,
-                    };
-                }
-            }
-            break;
         default:
             return state
     }

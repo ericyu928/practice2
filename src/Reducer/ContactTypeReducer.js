@@ -15,44 +15,13 @@ const ContactTypeReducer = (state = initialState, action) => {
                 editContactType: action.editContactType,
                 classAddMode: action.classAddMode
             }
-        case "saveContactType":
-            if (state.classAddMode) {
-                return {
-                    ...state,
-                    contacttypelist: [...state.contacttypelist, action.newClass],
-                    editContactType: state.editContactType,
-                    classAddMode: state.classAddMode
-                }
+        case "saveContactTypeList":
+            return {
+                ...state,
+                contacttypelist: action.contacttypelist,
+                editContactType: state.editContactType,
+                classAddMode: false
             }
-            else {
-                for (let i = 0; i < state.contacttypelist.length; i++) {
-                    if (action.newClass.ClassId === state.contacttypelist[i].ClassId) {
-                        const newItems = [...state.contacttypelist];
-                        newItems[i].Name = action.newClass.Name;
-                        return {
-                            ...state,
-                            contacttypelist: newItems,
-                            editContactType: state.editContactType,
-                            classAddMode: state.classAddMode
-                        };
-                    }
-                }
-                break;
-            }
-        case "deleteContactTypeList":
-            for (let i = 0; i < state.contacttypelist.length; i++) {
-                if (action.classId === state.contacttypelist[i].ClassId) {
-                    const newItems = [...state.contacttypelist];
-                    newItems.splice(i, 1);
-                    return {
-                        ...state,
-                        contacttypelist: newItems,
-                        editContactType: state.editContactType,
-                        classAddMode: state.classAddMode
-                    };
-                }
-            }
-            break;
         default:
             return state
     }
