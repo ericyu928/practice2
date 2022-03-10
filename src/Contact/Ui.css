@@ -74,10 +74,10 @@
     border-bottom:2px solid rgba(0, 0, 0, 0.253);
 }
 .container .tb tbody tr td{
-    border-bottom:2px solid rgb(235, 219, 219) !important; 
+    border-bottom:2px solid rgb(235, 219, 219) ; 
 }
 .container .tb tbody tr td.editbutton{
-    border-bottom:2px solid rgb(255, 255, 255) !important; 
+    border-bottom:2px solid rgb(255, 255, 255) ; 
 }
 .container input{
     width:99%;
