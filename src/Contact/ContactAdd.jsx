@@ -1,53 +1,32 @@
-import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from 'react-redux';
-
+import React from "react";
+import { Form, Input, Select, Button } from 'antd';
 import TypeError from "./TypeError";
+import { connect } from 'react-redux';
 
-const ContactAdd = (props) => {
+const Option = Select.Option;
 
-    const contactData = useSelector(state => state.Data.contactData);
-    const editContactData = useSelector(state => state.Data.editContactData);
-    const contactAddMode = useSelector(state => state.Data.contactAddMode);
 
-    const disPatch = useDispatch()
-
-    const saveContactData = (contactData) => disPatch({ type: 'saveContactData', contactData: contactData });
-
-    const [name, setName] = useState("");
-    const [sex, setSex] = useState("男");
-    const [email, setEmail] = useState("");
-    const [phone, setPhone] = useState("");
-    const [address, setAddress] = useState("");
-    const [errorType, setErrorType] = useState(false);
-
-    useEffect(() => {
-        let { Name, Sex, Email, Phone, Address } = editContactData;
-        setName(Name);
-        setSex(Sex);
-        setEmail(Email);
-        setPhone(Phone);
-        setAddress(Address);
-
-    }, [])
-    const nameTyped = event => {
-        setName(event.target.value)
+class ContactAdd extends React.Component {
+    constructor(props) {
+        super(props);
     }
-    const sexTyped = event => {
-        setSex(event.target.value)
+    formRef = React.createRef();
+
+    componentDidMount() {
+        let { editContactData } = this.props;
+        this.formRef.current.setFieldsValue({
+            ContactId: editContactData.ContactId,
+            Classname: editContactData.Classname,
+            ClassId: editContactData.ClassId,
+            Name: editContactData.Name,
+            Sex: editContactData.Sex,
+            Phone: editContactData.Phone,
+            Address: editContactData.Address,
+            Email: editContactData.Email
+        });
     }
-    const emailTyped = event => {
-        setEmail(event.target.value)
-    }
-    const phoneTyped = event => {
-        setPhone(event.target.value)
-    }
-    const addressTyped = event => {
-        setAddress(event.target.value)
-    }
-    const onCancel = () => {
-        props.onEditContact(false)
-    }
-    const deleteContact = () => {
+    deleteContact = () => {
+        let { contactData, editContactData, onDelete, saveContactData } = this.props;
         let newItems = [];
         for (let i = 0; i < contactData.length; i++) {
             if (editContactData.ContactId === contactData[i].ContactId) {
@@ -57,91 +36,96 @@ const ContactAdd = (props) => {
             }
         }
         saveContactData(newItems)
-        props.onDelete()//刪除關閉編輯頁
+        onDelete()//刪除關閉編輯頁
     }
+    onCancel = () => {
+        this.props.onEditContact(false)
+    }
+    formsubmit = (value) => {
+        let { contactAddMode, saveContactData, contactData, editContactData, onEditContact } = this.props;
 
-    const checkTyped = () => {
-        setErrorType(false)
-    }
-    const formsubmit = (event) => {
-        event.preventDefault();
-        if (name === "" || phone === "" || address === "" || email === "") {
-            setErrorType(true)
+        if (contactAddMode) {
+            saveContactData([...contactData,
+            {
+                ContactId: editContactData.ContactId,
+                ClassId: editContactData.ClassId,
+                Classname: editContactData.Classname,
+                Name: value.Name,
+                Sex: value.Sex,
+                Phone: value.Phone,
+                Address: value.Address,
+                Email: value.Email
+            }])
         }
         else {
-            if (contactAddMode) {
-                saveContactData([...contactData,
-                {
-                    ContactId: editContactData.ContactId,
-                    ClassId: editContactData.ClassId,
-                    Classname: editContactData.Classname,
-                    Name: name,
-                    Sex: sex,
-                    Phone: phone,
-                    Address: address,
-                    Email: email
-                }])
-            }
-            else {
-                let newItems = [];
-                for (let i = 0; i < contactData.length; i++) {
-                    if (editContactData.ContactId === contactData[i].ContactId) {
-                        newItems = [...contactData];
-                        newItems[i] = {
-                            ContactId: editContactData.ContactId,
-                            ClassId: editContactData.ClassId,
-                            Classname: editContactData.Classname,
-                            Name: name,
-                            Sex: sex,
-                            Phone: phone,
-                            Address: address,
-                            Email: email
-                        };
-                        break;
-                    }
+            let newItems = [];
+            for (let i = 0; i < contactData.length; i++) {
+                if (editContactData.ContactId === contactData[i].ContactId) {
+                    newItems = [...contactData];
+                    newItems[i] = {
+                        ContactId: editContactData.ContactId,
+                        ClassId: editContactData.ClassId,
+                        Classname: editContactData.Classname,
+                        Name: value.Name,
+                        Sex: value.Sex,
+                        Phone: value.Phone,
+                        Address: value.Address,
+                        Email: value.Email
+                    };
+                    break;
                 }
-                saveContactData(newItems);
             }
-            props.onEditContact(false)
+            saveContactData(newItems);
         }
+        onEditContact(false)
+
     }
-
-
-    return (
-        <form onSubmit={formsubmit}>
-            {errorType && <TypeError onCheck={checkTyped} onVisible={errorType} />}
-            {!errorType && <div>
+    render() {
+        let { contactAddMode } = this.props;
+        return (
+            <Form ref={this.formRef} onFinish={this.formsubmit}>
                 {contactAddMode && <label>新增通訊錄</label>}
                 {!contactAddMode && <label>修改通訊錄</label>}
                 <br></br>
-                <label className="textlabel">類別</label>
-                <input className="readonly" type="text" value={editContactData.Classname} readOnly="readonly"></input>
-
-                <label className="textlabel">姓名</label>
-                <input type="text" value={name} placeholder="姓名" onChange={nameTyped}></input>
-
-                <label className="textlabel">性別</label>
-                <select value={sex} onChange={sexTyped}>
-                    <option value="男">男</option>
-                    <option value="女">女</option>
-                </select>
-
-                <label className="textlabel">Email</label>
-                <input type="email" value={email} placeholder="Email" onChange={emailTyped}></input>
-
-                <label className="textlabel">電話</label>
-                <input type="text" value={phone} placeholder="電話" onChange={phoneTyped}></input>
-
-                <label className="textlabel">地址</label>
-                <input type="text" value={address} placeholder="地址" onChange={addressTyped}></input>
-
-                <button className="enter" type="submit">儲存</button>
-                {!contactAddMode && <button type="button" className="del" onClick={deleteContact}>刪除</button>}
-                <button className="back" type="button" onClick={onCancel}>取消</button>
-            </div>
-            }
-        </form>
-    )
-
+                <Form.Item name="Classname" label="類別">
+                    <Input className="readonly" readOnly="readonly" />
+                </Form.Item>
+                <Form.Item name="Name" label="姓名" rules={[{ required: true, message: '請輸入姓名'}]}>
+                    <Input type="text" placeholder="姓名" />
+                </Form.Item>
+                <Form.Item name="Sex" label="性別" rules={[{ required: true, message: '請輸入性別'}]}>
+                    <Select>
+                        <Option value="男">男</Option>
+                        <Option value="女">女</Option>
+                    </Select>
+                </Form.Item>
+                <Form.Item name="Email" label="Email" rules={[{ required: true, message: '請輸入Email'}]}>
+                    <Input type="email" placeholder="Email" />
+                </Form.Item>
+                <Form.Item name="Phone" label="電話" rules={[{ required: true, message: '請輸入電話'}]}>
+                    <Input type="text" placeholder="電話" />
+                </Form.Item>
+                <Form.Item name="Address" label="地址" rules={[{ required: true, message: '請輸入地址'}]}>
+                    <Input type="text" placeholder="地址" />
+                </Form.Item>
+                <Button type="primary" shape="round" htmlType="submit">儲存</Button>
+                {!contactAddMode && <Button type="danger" shape="round" onClick={this.deleteContact}>刪除</Button>}
+                <Button shape="round" onClick={this.onCancel}>取消</Button>
+            </Form>
+        )
+    }
 }
-export default ContactAdd;
+
+const useReduxProps = state => {
+    return {
+        contactData: state.Data.contactData,
+        editContactData: state.Data.editContactData,
+        contactAddMode: state.Data.contactAddMode
+    }
+}
+const useReduxSelector = dispatch => {
+    return {
+        saveContactData: (contactData) => dispatch({ type: 'saveContactData', contactData: contactData })
+    }
+}
+export default connect(useReduxProps, useReduxSelector)(ContactAdd);
