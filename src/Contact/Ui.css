@@ -89,7 +89,7 @@
 }
 .container input.readonly{
     width:99%;
-    height: 20px;
+    height: 30px;
     background-color:rgba(15, 15, 15, 0.178);
     margin:0px auto;
     border-radius:5px;
@@ -128,5 +128,10 @@
     height: 30px;
     margin-top: 10px;
     margin-right: 10px;
+    border-radius:5px;
+}
+.container form input{
+    height: 30px;
+    border-color: black;
     border-radius:5px;
 }

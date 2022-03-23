@@ -90,8 +90,6 @@ class Contact extends React.Component {
 const useReduxProps = state => {
     return {
         contacttypelist: state.List.contacttypelist,
-        contactData: state.Data.contactData,
-        contactAddMode: state.Data.contactAddMode
     }
 }
 const useReduxSelector = dispatch => {

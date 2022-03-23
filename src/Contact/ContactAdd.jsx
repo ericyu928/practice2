@@ -14,16 +14,7 @@ class ContactAdd extends React.Component {
 
     componentDidMount() {
         let { editContactData } = this.props;
-        this.formRef.current.setFieldsValue({
-            ContactId: editContactData.ContactId,
-            Classname: editContactData.Classname,
-            ClassId: editContactData.ClassId,
-            Name: editContactData.Name,
-            Sex: editContactData.Sex,
-            Phone: editContactData.Phone,
-            Address: editContactData.Address,
-            Email: editContactData.Email
-        });
+        this.formRef.current.setFieldsValue(editContactData);
     }
     deleteContact = () => {
         let { contactData, editContactData, onDelete, saveContactData } = this.props;
@@ -42,6 +33,7 @@ class ContactAdd extends React.Component {
         this.props.onEditContact(false)
     }
     formsubmit = (value) => {
+        console.log(value)
         let { contactAddMode, saveContactData, contactData, editContactData, onEditContact } = this.props;
 
         if (contactAddMode) {
@@ -91,7 +83,7 @@ class ContactAdd extends React.Component {
                     <Input className="readonly" readOnly="readonly" />
                 </Form.Item>
                 <Form.Item name="Name" label="姓名" rules={[{ required: true, message: '請輸入姓名'}]}>
-                    <Input type="text" placeholder="姓名" />
+                    <Input type="text" placeholder="姓名"/>
                 </Form.Item>
                 <Form.Item name="Sex" label="性別" rules={[{ required: true, message: '請輸入性別'}]}>
                     <Select>
