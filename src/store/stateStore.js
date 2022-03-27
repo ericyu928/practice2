@@ -1,12 +1,13 @@
 import { createStore, combineReducers } from 'redux'
 
-import ContactListReducer from '../Reducer/ContactListReducer'
-import ContactTypeReducer from '../Reducer/ContactTypeReducer';
-
+import ContactReducer from '../Reducer/ContactReducer'
+import ContactClassReducer from '../Reducer/ContactClassReducer';
+import LayoutReducer from '../Reducer/LayoutReducer';
 
 const stateStoreReducer = combineReducers({
-   Data: ContactListReducer,
-   List: ContactTypeReducer
+   Data: ContactReducer,
+   Class: ContactClassReducer,
+   Layout: LayoutReducer
 });
 
 const stateStore = createStore(stateStoreReducer);
