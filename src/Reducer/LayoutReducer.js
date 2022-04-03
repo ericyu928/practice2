@@ -1,13 +1,22 @@
 const initialState = {
-    showType: "Main"
+    LayoutType: "Main",
+    Params: {}
 }
+const ChangeType = (LayoutType, Params) => {
+    return {
+        type: "changeType",
+        LayoutType,
+        Params
+    }
+}
+export { ChangeType };
 
 const LayoutReducer = (state = initialState, action) => {
     switch (action.type) {
         case "changeType":
             return {
                 ...state,
-                showType: action.layoutType
+                ...action
             }
         default:
             return state

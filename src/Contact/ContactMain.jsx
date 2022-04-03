@@ -1,15 +1,16 @@
 import React from "react";
 import { Button, Select, Table } from 'antd';
 import { connect } from "react-redux";
-
+import { bindActionCreators } from 'redux';
+import { ChangeType } from '../Reducer/LayoutReducer'
 const Option = Select.Option;
 
 class ContactMain extends React.Component {
     constructor(props) {
         super(props);
-        this.state = ({
+        this.state = {
             contactTable: []
-        })
+        };
         this.columns = [
             {
                 title: '名稱',
@@ -37,9 +38,8 @@ class ContactMain extends React.Component {
                 align: 'center'
             },
             {
-                render: (record) => (
-                    //onClick(頁面切換,單筆明細資料,修改模式)
-                    <Button shape="round" type="primary" onClick={this.handleLayoutType.bind(this, "ContactDataEdit", record, false)}>修改</Button>
+                render: (items) => (
+                    <Button shape="round" type="primary" onClick={this.editData.bind(this, items)}>修改</Button>
                 )
             }
         ]
@@ -49,45 +49,31 @@ class ContactMain extends React.Component {
             contactTable: this.props.contactData
         })
     }
-    handleClassSelect = value => {
-        let newList = []
+    editData = items => {
+        this.props.actions.ChangeType("ContactDataEdit", items);
+    }
+    classSelect = value => {
         let { contactData } = this.props;
-        for (let i = 0; i < contactData.length; i++) {
-            if (value !== "*") {
-                if (value === contactData[i].ClassId) {
-                    newList.push(contactData[i])
-                }
-            }
-            //類別選擇為全部
-            else {
-                newList.push(contactData[i])
-            }
-        }
+        let newList = contactData.filter(items => value === "*" || items.ClassId === value);
         this.setState({
             contactTable: newList
         })
-
-    }
-    handleLayoutType = (event, contactData, contactAddMode) => {
-        this.props.setLayoutType(event);
-        this.props.editContactData(contactData, contactAddMode);
     }
     render() {
         return (
             <div className="container">
                 <div className='ContactTypeTitle'>
-                    <Button onClick={this.handleLayoutType.bind(this, "ContactClass")}>類別維護</Button>
+                    <Button onClick={() => { this.props.actions.ChangeType("ContactClass") }}>類別維護</Button>
                 </div>
                 <h1>通訊錄</h1>
                 <label className="textlabel">類別</label>
-                <Select style={{ width: "150px" }} onChange={this.handleClassSelect.bind(this)} defaultValue="*">
+                <Select style={{ width: "150px" }} onChange={this.classSelect.bind(this)} defaultValue="*">
                     <Option value="*">全部</Option>
                     {this.props.contactClass.map((c_class) =>
                         <Option key={c_class.ClassId} value={c_class.ClassId}>{c_class.Name}</Option>
                     )}
                 </Select>
-                {/* onClick(頁面切換,單筆明細資料,修改模式) */}
-                <Button className="enter" onClick={this.handleLayoutType.bind(this, "ContactDataEdit", '', true)}>新增</Button>
+                <Button className="enter" onClick={() => { this.props.actions.ChangeType("ContactDataEdit") }}>新增</Button>
                 <Table
                     columns={this.columns}
                     dataSource={this.state.contactTable}
@@ -100,15 +86,13 @@ class ContactMain extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        layoutType: state.Layout.showType,
-        contactClass: state.Class.contactClassList,
-        contactData: state.Data.contactData
+        contactData: state.Data.contactData,
+        contactClass: state.Class.contactClass
     }
 }
 const mapDispatchToProps = dispatch => {
     return {
-        setLayoutType: (LayoutType) => dispatch({ type: "changeType", layoutType: LayoutType }),
-        editContactData: (contactDetail, contactAddMode) => dispatch({ type: "editContactData", contactDetail: contactDetail, contactAddMode: contactAddMode })
+        actions: bindActionCreators({ ChangeType }, dispatch),
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(ContactMain);

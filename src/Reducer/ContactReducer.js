@@ -1,6 +1,5 @@
 import ContactData from "../ContactData.json";
 import ContactClass from "../ContactClass.json";
-import ContactClassReducer from "./ContactClassReducer";
 
 let c = ContactData;
 for (let x = 0; x < ContactData.length; x++) {
@@ -12,62 +11,15 @@ for (let x = 0; x < ContactData.length; x++) {
     }
 }
 const initialState = {
-    contactData: c,
-    contactDetail: [{
-        ContactId: "",
-        ClassId: "",
-        Classname:"",
-        Name: "",
-        Sex: "",
-        Phone: "",
-        Address: "",
-        Email: ""
-    }],
-    contactAddMode: false,
+    contactData: c
 }
 
 const ContactReducer = (state = initialState, action) => {
     switch (action.type) {
-        case "editContactData":
-            let editData = []
-            if (!action.classAddMode) {
-                editData = action.contactDetail
-            }
+        case "setContactData":
             return {
                 ...state,
-                contactDetail: editData,
-                contactAddMode: action.contactAddMode,
-            }
-        case "saveContactData":
-            let list = [...state.contactData];
-            if (action.mode === "Save") {
-                if (state.contactAddMode) {
-                    list = [...list, {
-                        ...action.editData, ContactId: Math.random.toString(),
-                        ClassId:action.classId,
-                        Classname: action.className
-                    }]
-                }
-
-                else {
-                    console.log(action.editData)
-                    list = list.map((contactData) =>
-                        contactData.ContactId === state.contactDetail.ContactId ?
-                            { ...action.editData, ContactId: state.contactDetail.ContactId, ClassId: state.contactDetail.ClassId } : contactData
-                    )
-                }
-                console.log(action.className)
-
-            }
-            else if (action.mode === "Del") {
-                list = list.filter((contactData) =>
-                    contactData.ContactId !== state.contactDetail.ContactId
-                )
-            }
-            return {
-                ...state,
-                contactData: list,
-                classAddMode: false
+                contactData: action.data
             }
         default:
             return state

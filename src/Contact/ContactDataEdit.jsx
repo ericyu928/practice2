@@ -1,7 +1,9 @@
 import React from "react";
 import { connect } from 'react-redux';
 import { Form, Input, Select, Button } from 'antd';
-
+import { bindActionCreators } from 'redux';
+import { ChangeType } from '../Reducer/LayoutReducer'
+import { ContactModel } from '../Model/ContactModel';
 const Option = Select.Option;
 const validateMessages = {
     required: '請輸入${label}',
@@ -17,10 +19,13 @@ class ContactDataEdit extends React.Component {
     formRef = React.createRef();
 
     componentDidMount() {
-        let { contactDetail, Classname, contactAddMode } = this.props;
-        this.formRef.current.setFieldsValue(contactDetail);
-        if (contactAddMode) {
-            this.formRef.current.setFieldsValue({ Classname: Classname });
+        this.formRef.current.setFieldsValue(this.props.Data);
+        if (this.props.Data) {
+            this.formRef.current.setFieldsValue({ Classname: this.props.Data.Classname });
+        }
+        else {
+            console.log(this.props.contactClass[0])
+            this.formRef.current.setFieldsValue({ Classname: this.props.contactClass[0].Name });
         }
     }
 
@@ -39,24 +44,41 @@ class ContactDataEdit extends React.Component {
             return Promise.reject("手機號碼格式錯誤!");
         }
     }
-    handleDelClick = () => {
-        this.props.saveContactData("Del")
-        this.handleLayoutType();
+    delClick = () => {
+        let { Data, setData, contactData } = this.props;
+        let data = [...contactData];
+        let i = contactData.findIndex(p => p.ContactId === Data.ContactId);
+        data.splice(i, 1);
+        setData(data)
+        this.props.actions.ChangeType("Main")
     }
 
     formsubmit = (value) => {
-        let { Classid, Classname, saveContactData } = this.props;
-        saveContactData("Save", value, Classid, Classname)//新增時帶入最前面一筆課程代號、名稱。修改不會用到
-        this.handleLayoutType();
+        let { Data, setData, contactData } = this.props;
+
+        let data = [...contactData];
+        let model = new ContactModel();
+
+
+        if (Data) {
+            let i = contactData.findIndex(p => p.ContactId === Data.ContactId);
+            data[i] = value;
+        }
+        else {
+            model = value;
+            model.ClassId = this.props.contactClass[0].ClassId;
+
+            data.push(model);
+            console.log(model)
+        }
+        setData(data)
+        this.props.actions.ChangeType("Main")
     }
-    handleLayoutType = () => {
-        this.props.setLayoutType("Main");
-    }
+
     render() {
-        let { contactAddMode } = this.props;
         return (
-            <Form ref={this.formRef} onFinish={this.formsubmit} validateMessages={validateMessages}>
-                {contactAddMode ? <label>新增通訊錄</label> : <label>修改通訊錄</label>}
+            <Form ref={this.formRef} onFinish={this.formsubmit} validateMessages={validateMessages} id="contactForm">
+                {!this.props.Data ? <label>新增通訊錄</label> : <label>修改通訊錄</label>}
                 <br></br>
                 <Form.Item name="Classname" label="類別">
                     <Input className="readonly" readOnly="readonly" />
@@ -80,30 +102,23 @@ class ContactDataEdit extends React.Component {
                     <Input type="text" placeholder="地址" />
                 </Form.Item>
                 <Button type="primary" shape="round" htmlType="submit">儲存</Button>
-                {!contactAddMode && <Button type="danger" shape="round" onClick={this.handleDelClick}>刪除</Button>}
-                <Button shape="round" onClick={this.handleLayoutType}>取消</Button>
+                {this.props.Data && <Button type="danger" shape="round" onClick={this.delClick.bind(this)}>刪除</Button>}
+                <Button shape="round" onClick={() => { this.props.actions.ChangeType("Main") }}>取消</Button>
             </Form>
         )
     }
 }
 const mapStateToProps = state => {
     return {
-        contactAddMode: state.Data.contactAddMode,
-        contactDetail: state.Data.contactDetail,
-        Classid: state.Class.contactClassList[0].ClassId,
-        Classname: state.Class.contactClassList[0].Name
+        contactData: state.Data.contactData,
+        contactClass: state.Class.contactClass
     }
 }
 const mapDispatchToProps = dispatch => {
     return {
-        setLayoutType: (LayoutType) => dispatch({ type: "changeType", layoutType: LayoutType }),
-        saveContactData: (mode, editData, classId, className) => dispatch({
-            type: "saveContactData",
-            mode: mode,
-            editData: editData,
-            classId: classId,
-            className: className
-        })
+        actions: bindActionCreators({ ChangeType }, dispatch),
+        setData: (data) => dispatch({ type: "setContactData", data })
+
     }
 }
 

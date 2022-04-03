@@ -1,14 +1,12 @@
 import React from "react";
-import { Button, Select } from 'antd';
 import { connect } from "react-redux";
 import ContactClass from './ContactClass';
 import ContactMain from "./ContactMain";
 import ContactDataEdit from "./ContactDataEdit";
-
+import ContactClassEdit from "./ContactClassEdit";
 import './Ui.css';
 
 
-const Option = Select.Option;
 
 class Contact extends React.Component {
     constructor(props) {
@@ -16,9 +14,9 @@ class Contact extends React.Component {
 
     }
     render() {
-        let { layoutType } = this.props;
+        let { LayoutType, Params } = this.props;
         let layout;
-        switch (layoutType) {
+        switch (LayoutType) {
             case "Main":
                 layout = (
                     <ContactMain />
@@ -26,7 +24,7 @@ class Contact extends React.Component {
                 break;
             case "ContactDataEdit":
                 layout = (
-                    <ContactDataEdit />
+                    <ContactDataEdit Data={Params} />
                 );
                 break;
             case "ContactClass":
@@ -34,8 +32,15 @@ class Contact extends React.Component {
                     <ContactClass />
                 );
                 break;
+            case "ContactClassEdit":
+                layout = (
+                    <ContactClassEdit Data={Params}/>
+                );
+                break;
             default:
-                layout = "";
+                layout = (
+                    <ContactMain />
+                );
         }
 
         return (
@@ -48,13 +53,9 @@ class Contact extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        layoutType: state.Layout.showType,
-        contactClass: state.Class.contactTypeList,
+        LayoutType: state.Layout.LayoutType,
+        Params: state.Layout.Params,
     }
 }
-const mapDispatchToProps = dispatch => {
-    return {
-        setLayoutType: (LayoutType) => dispatch({ type: "changeType", layoutType: LayoutType })
-    }
-}
-export default connect(mapStateToProps, mapDispatchToProps)(Contact);
+
+export default connect(mapStateToProps)(Contact);
