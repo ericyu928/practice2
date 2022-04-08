@@ -4,6 +4,8 @@ import { Form, Input, Select, Button } from 'antd';
 import { bindActionCreators } from 'redux';
 import { ChangeType } from '../Reducer/LayoutReducer'
 import { ContactModel } from '../Model/ContactModel';
+import { PostData } from '../lib/utility'
+
 const Option = Select.Option;
 const validateMessages = {
     required: '請輸入${label}',
@@ -46,32 +48,39 @@ class ContactDataEdit extends React.Component {
     }
     delClick = () => {
         let { Data, setData, contactData } = this.props;
-        let data = [...contactData];
-        let i = contactData.findIndex(p => p.ContactId === Data.ContactId);
-        data.splice(i, 1);
-        setData(data)
+        // let data = [...contactData];
+        // let i = contactData.findIndex(p => p.ContactId === Data.ContactId);
+        // data.splice(i, 1);
+        // setData(data)
+        let cData = [];
+        cData = PostData("/ContactApi/api/Contact/DelData",Data.ContactId);
+        setData(cData.Result);
         this.props.actions.ChangeType("Main")
     }
 
     formsubmit = (value) => {
         let { Data, setData, contactData } = this.props;
 
-        let data = [...contactData];
+        // let data = [...contactData];
         let model = new ContactModel();
+        model = value;
 
+        let cData = [];
+        cData = PostData("/ContactApi/api/Contact/ModifyData",value);
+        console.log(cData)
+        setData(cData.Result);
+        // if (Data) {
+        //     let i = contactData.findIndex(p => p.ContactId === Data.ContactId);
+        //     data[i] = value;
+        // }
+        // else {
+        //     model = value;
+        //     model.ClassId = this.props.contactClass[0].ClassId;
 
-        if (Data) {
-            let i = contactData.findIndex(p => p.ContactId === Data.ContactId);
-            data[i] = value;
-        }
-        else {
-            model = value;
-            model.ClassId = this.props.contactClass[0].ClassId;
-
-            data.push(model);
-            console.log(model)
-        }
-        setData(data)
+        //     data.push(model);
+        //     console.log(model)
+        // }
+        // setData(data)
         this.props.actions.ChangeType("Main")
     }
 

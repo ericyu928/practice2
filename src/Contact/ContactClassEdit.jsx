@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { ChangeType } from '../Reducer/LayoutReducer'
 import { ContactClassModel } from '../Model/ContactClassModel';
+import { PostData } from '../lib/utility'
 
 class ContactClassEdit extends React.Component {
     constructor(props) {
@@ -29,30 +30,47 @@ class ContactClassEdit extends React.Component {
     saveClick = () => {
         let { Data, setClassData, contactClass } = this.props;
         let data = [...contactClass];
+       
+        let model = new ContactClassModel();
+
+
+        let cClass = [];
 
         if (Data) {
-            let i = contactClass.findIndex(p => p.ClassId === Data.ClassId);
-            data[i]["Name"] = this.nameRef.current.input.value;
-            setClassData(data)
+            model.ClassId=Data.ClassId;
         }
-        else {
+        model.Name = this.state.name;
 
-            let model = new ContactClassModel();
-            model.Name = this.state.name;
+        cClass = PostData("/ContactApi/api/Contact/ModifyClass",{ClassId:Data.ClassId,Name:this.state.name});
+        console.log(cClass)
+        setClassData(cClass.Result);
+        // if (Data) {
+        //     let i = contactClass.findIndex(p => p.ClassId === Data.ClassId);
+        //     data[i]["Name"] = this.nameRef.current.input.value;
+        //     setClassData(data)
+        // }
+        // else {
 
-            data = [...data, model]
-            setClassData(data)
+        //     let model = new ContactClassModel();
+        //     model.Name = this.state.name;
 
-        }
+        //     data = [...data, model]
+        //     setClassData(data)
+
+        // }
         this.props.actions.ChangeType("ContactClass")
     }
     delClick = () => {
         let { Data, setClassData, contactClass } = this.props;
-        let data = [...contactClass];
-        let i = contactClass.findIndex(p => p.ClassId === Data.ClassId);
-        data.splice(i, 1);
-        console.log(i, data)
-        setClassData(data)
+        // let data = [...contactClass];
+        // let i = contactClass.findIndex(p => p.ClassId === Data.ClassId);
+        // data.splice(i, 1);
+        // console.log(i, data)
+
+        let cClass = [];
+        cClass = PostData("/ContactApi/api/Contact/DelClass",{ClassId:Data.ClassId});
+        setClassData(cClass.Result);
+        // setClassData(data)
         this.props.actions.ChangeType("ContactClass")
     }
     render() {

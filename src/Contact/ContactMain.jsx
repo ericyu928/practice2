@@ -3,6 +3,8 @@ import { Button, Select, Table } from 'antd';
 import { connect } from "react-redux";
 import { bindActionCreators } from 'redux';
 import { ChangeType } from '../Reducer/LayoutReducer'
+import { PostData } from '../lib/utility'
+
 const Option = Select.Option;
 
 class ContactMain extends React.Component {
@@ -45,9 +47,24 @@ class ContactMain extends React.Component {
         ]
     }
     componentDidMount() {
-        this.setState({
-            contactTable: this.props.contactData
-        })
+        let { contactData, setData, setClassData } = this.props;
+        if (!contactData) {
+            let cData = [];
+            let cClass = [];
+            cData = PostData("/ContactApi/api/Contact/GetContactData",[]);
+            setData(cData.Result);
+            cClass = PostData("/ContactApi/api/Contact/GetContactClass",[]);
+            setClassData(cClass.Result);
+            this.setState({
+                contactTable: cData.Result
+            })
+        }
+        else {
+            this.setState({
+                contactTable: contactData
+            })
+        }
+
     }
     editData = items => {
         this.props.actions.ChangeType("ContactDataEdit", items);
@@ -69,7 +86,7 @@ class ContactMain extends React.Component {
                 <label className="textlabel">類別</label>
                 <Select style={{ width: "150px" }} onChange={this.classSelect.bind(this)} defaultValue="*">
                     <Option value="*">全部</Option>
-                    {this.props.contactClass.map((c_class) =>
+                    {this.props.contactClass && this.props.contactClass.map((c_class) =>
                         <Option key={c_class.ClassId} value={c_class.ClassId}>{c_class.Name}</Option>
                     )}
                 </Select>
@@ -93,6 +110,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         actions: bindActionCreators({ ChangeType }, dispatch),
+        setData: (data) => dispatch({ type: "setContactData", data }),
+        setClassData: (data) => dispatch({ type: "setClassData", data })
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(ContactMain);

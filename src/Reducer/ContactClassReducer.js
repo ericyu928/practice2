@@ -1,7 +1,5 @@
-import ContactClass from "../ContactClass.json";
-
 const initialState = {
-    contactClass: ContactClass
+    contactClass: null
 }
 
 const ContactClassReducer = (state = initialState, action) => {
